@@ -38,6 +38,7 @@ ____________________ */
 	$logfile 		= $pathtoapp."logs/shift.log";			// Needs to be a FULL path, so not ~/shift
 	$linestoread	= 50;									// How many lines to read from the end of $logfile
 	$max_count 		= 10;									// How may times $msg may occur
+	$createsnapshot	= true;
 
 /* PREREQUISITES
 ____________________ */
@@ -153,6 +154,11 @@ echo $date." - Going to check for forked status now...\n";
 	    $query = "UPDATE $table SET counter=counter+$count, time=time()";
     	$db->exec($query) or die('Unable to plus the counter!');
 
-    	echo $date." - Counter ($counter) + current count ($count) is not sufficient to restore from snapshot. Need: $max_count";
+    	echo $date." - Counter ($counter) + current count ($count) is not sufficient to restore from snapshot. Need: $max_count \n";
+
+    	// If counter + current count equals 0 AND option $createsnapshot is true, create a new snapshot
+    	if(($counter + $count) == 0){
+    		echo ($counter + $count)."\n";
+    	}
 
       }

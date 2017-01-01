@@ -95,7 +95,7 @@ ____________________ */
 /* CHECK IF FORKED
 ____________________ */
 
-echo $date." - Going to check for forked status now...";
+echo $date." - Going to check for forked status now...\n";
 
 // Set the database to save our counts to
     $db = new SQLite3($baseDir.$database) or die('Unable to open database');

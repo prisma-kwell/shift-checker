@@ -69,8 +69,11 @@ if (file_exists($lockfile)) {
 /* CHECK STATUS
 ____________________ */
 
-// Check status with shift_manager.bash
-   $check_status = passthru("cd $pathtoapp && bash shift_manager.bash status | cut -z -b1-3", $check_output);
+// Check status with shift_manager.bash. Use PHP's ob_ function to create an output buffer
+	ob_start();
+   	$check_status = passthru("cd $pathtoapp && bash shift_manager.bash status | cut -z -b1-3");
+	$check_output = ob_get_contents();
+	ob_end_clean();
 
 // If status is not OK...
    if(strpos($check_output, 'OK') === false){
@@ -91,6 +94,8 @@ ____________________ */
 
 /* CHECK IF FORKED
 ____________________ */
+
+echo $date." - Going to check for forked status now...";
 
 // Set the database to save our counts to
     $db = new SQLite3($baseDir.$database) or die('Unable to open database');
@@ -147,5 +152,7 @@ ____________________ */
 
 	    $query = "UPDATE $table SET counter=counter+$count, time=time()";
     	$db->exec($query) or die('Unable to plus the counter!');
+
+    	echo $date." - Counter ($counter) + current count ($count) is not sufficient to restore from snapshot. Need: $max_count";
 
       }

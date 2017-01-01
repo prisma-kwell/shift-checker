@@ -25,12 +25,11 @@
 	 * @license https://github.com/jeeweevee/shift-checker/blob/master/LICENSE
 	 */
 
-
 /* GENERAL SETTINGS
 ____________________ */
 
 	$date			= date("Y-m-d H:i:s");					// Current date
-	$baseDir		= "/scripts/";							// Folder which contains THIS file
+	$baseDir		= getcwd()."/";							// Folder which contains THIS file
 	$database		= "check_fork.sqlite3";					// Database name to use
 	$table 			= "forks";								// Table name to use
 	$msg 			= "Failed to find common block with";	// Message that is printed when forked

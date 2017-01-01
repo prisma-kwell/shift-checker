@@ -73,15 +73,18 @@ ____________________ */
    $check_status = passthru("cd $pathtoapp && bash shift_manager.bash status | cut -z -b1-3");
 
 // If status is not OK...
-   if($check_status != "OK"){
+   if(strpos($check_status, 'OK') === false){
    		
 	// Echo something to our log file
-   		echo $date." - Delegate not running/healthy. Let me restart it for you...";
-   		passthru("forever stopall && cd $pathtoapp && forever start app.js");
+   		echo $date." - Delegate not running/healthy. Let me restart it for you...\n";
+   		echo "Stopping all forever processes...\n";
+   			passthru("forever stopall");
+   		echo "Starting Shift forever proces...\n";
+   			passthru("cd $pathtoapp && forever start app.js");
    
    }else{
    
-   		echo $date." - Still running...";
+   		echo $date." - Still running...\n";
    
    }
 
@@ -107,7 +110,7 @@ ____________________ */
     	if($numExists < 1){
         	
         	// Echo something to our log file
-        	echo $date." - No rows exist...Adding!\n";
+        	echo $date." - No rows exist in our table to update the counter...Adding a row for you.\n";
         	
         	$insert = "INSERT INTO $table (counter, time) VALUES ('0', time())";
         	$db->exec($insert) or die('Failed to add row!');

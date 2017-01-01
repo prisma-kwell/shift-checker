@@ -70,10 +70,10 @@ if (file_exists($lockfile)) {
 ____________________ */
 
 // Check status with shift_manager.bash
-   $check_status = passthru("cd $pathtoapp && bash shift_manager.bash status | cut -z -b1-3");
+   $check_status = passthru("cd $pathtoapp && bash shift_manager.bash status | cut -z -b1-3", $check_output);
 
 // If status is not OK...
-   if(strpos($check_status, 'OK') === false){
+   if(strpos($check_output, 'OK') === false){
    		
 	// Echo something to our log file
    		echo $date." - Delegate not running/healthy. Let me restart it for you...\n";

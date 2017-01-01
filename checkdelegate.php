@@ -30,6 +30,7 @@ ____________________ */
 
 	$date			= date("Y-m-d H:i:s");					// Current date
 	$baseDir		= getcwd()."/";							// Folder which contains THIS file
+	$lockfile		= "checkdelegate.lock";					// Name of our lock file
 	$database		= "check_fork.sqlite3";					// Database name to use
 	$table 			= "forks";								// Table name to use
 	$msg 			= "Failed to find common block with";	// Message that is printed when forked
@@ -38,12 +39,32 @@ ____________________ */
 	$linestoread	= 50;									// How many lines to read from the end of $logfile
 	$max_count 		= 10;									// How may times $msg may occur
 
-
 /* PREREQUISITES
 ____________________ */
 
 require('functions.php');
 
+/* LOCK FILE
+____________________ */
+
+// Check if lock file exists
+if (file_exists($lockfile)) {
+
+	// Check age of lock file and touch it if older than 10 minutes
+	if((time()-filectime($lockfile)) >= 600){
+	
+		echo $date." - Lock file age is older than 10 minutes. Going to touch it and continue with the script.\n";
+		
+		if (!touch($lockfile)){
+		  exit("Error touching $lockfile\n");
+		}
+
+	// If file is younger than 10 minutes, exit!
+	}else{
+		exit("A previous job is still running...\n");
+	}
+
+}
 
 /* CHECK STATUS
 ____________________ */

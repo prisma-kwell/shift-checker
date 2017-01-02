@@ -53,7 +53,7 @@ if (file_exists($lockfile)) {
 /* CHECK STATUS
 ____________________ */
 
-echo "Let's check if our delegate is still running...\n";
+echo $date." - Let's check if our delegate is still running...\n";
 
 // Check status with shift_manager.bash. Use PHP's ob_ function to create an output buffer
 	ob_start();

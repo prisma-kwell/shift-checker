@@ -1,25 +1,5 @@
 <?php
 	/**
-	 * This script checks the status of your Shiftnrg Delegate by using shift_manager.bash
-	 * When status is not "OK" it will (re)start your delegate.
-	 * 
-	 * This script will also check whether your node has forked or not. 
-	 * When forked, it will stop Shift, restore to previous snapshot, and start Shift again.
-	 * Of course this requires shift-snapshot.sh:
-	 * 		https://github.com/mrgrshift/shift-snapshot
-	 *  
-	 * There are some echo lines in this file. 
-	 * When you redirect output to a log file in your crontab, these lines will show up. 
-	 * See section Example crontab for more information.
-	 * 
-	 * Extra note: 
-	 * Be sure to run this script after:
-	 * 	- You have installed shift-snapshot
-	 * 	- You have created a snapshot with shift-snapshot
-	 * 
-	 * Contact me on Twitter: @lepetitjan 
-	 * or Shiftnrg Slack: https://shiftnrg.slack.com/team/jan
-	 * 
 	 * @author Jan
 	 * @link https://github.com/jeeweevee/shift-checker
 	 * @license https://github.com/jeeweevee/shift-checker/blob/master/LICENSE
@@ -73,6 +53,8 @@ if (file_exists($lockfile)) {
 /* CHECK STATUS
 ____________________ */
 
+echo "Let's check if our delegate is still running...\n";
+
 // Check status with shift_manager.bash. Use PHP's ob_ function to create an output buffer
 	ob_start();
    	$check_status = passthru("cd $pathtoapp && bash shift_manager.bash status | cut -z -b1-3");
@@ -91,7 +73,7 @@ ____________________ */
    
    }else{
    
-   		echo $date." - Still running...\n";
+   		echo $date." - Delegate is still running...\n";
    
    }
 

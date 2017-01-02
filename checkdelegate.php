@@ -162,15 +162,16 @@ echo $date." - Going to check for forked status now...\n";
     		echo $date." - It's safe to create a daily snapshot and the setting is enabled.\n";
     		echo $date." - Let's check if a snapshot was already created today...\n";
     		
-    		$snapshots = glob($pathtoapp.'snapshot/shift_db*.snapshot.tar');
+    		$snapshots = glob($pathtoapp.'snapshot/shift_db'.date("d-m-Y").'*.snapshot.tar');
 			if (!empty($snapshots)) {
 			
-			    // something exists
-			    print_r($snapshots);
+			    echo $date." - A snapshot already exists:\n";
+			    	print_r($snapshots)."\n";
+			    echo $date." - Done!\n";
 			
 			}else{
 
-				echo "No snapshot exists for today, I will create one for you now!\n";
+				echo $date." - No snapshot exists for today, I will create one for you now!\n";
 				// passthru("cd $pathtoapp && shift-snapshot.sh create");
 			
 			}

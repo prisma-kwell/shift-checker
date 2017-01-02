@@ -1,8 +1,8 @@
 <?php
 	/**
 	 * @author Jan
-	 * @link https://github.com/jeeweevee/shift-checker
-	 * @license https://github.com/jeeweevee/shift-checker/blob/master/LICENSE
+	 * @link https://github.com/lepetitjan/shift-checker
+	 * @license https://github.com/lepetitjan/shift-checker/blob/master/LICENSE
 	 */
 
 /* GENERAL SETTINGS

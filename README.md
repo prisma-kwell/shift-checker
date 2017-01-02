@@ -1,6 +1,4 @@
 # shift-checker
-Checks the status of your Shiftnrg delegate
-
 This script checks the status of your Shiftnrg Delegate by using shift_manager.bash.<br>
 When status is not "OK" it will restart your delegate.
  

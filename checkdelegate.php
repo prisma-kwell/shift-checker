@@ -19,6 +19,7 @@ ____________________ */
 	$linestoread	= 50;									// How many lines to read from the end of $logfile
 	$max_count 		= 10;									// How may times $msg may occur
 	$createsnapshot	= true;
+	$max_snapshots	= 3;
 
 /* PREREQUISITES
 ____________________ */
@@ -157,13 +158,26 @@ echo $date." - Going to check for forked status now...\n";
 			
 			    echo $date." - A snapshot already exists:\n";
 			    	print_r($snapshots)."\n";
+			    
+			    echo $date." - Going to remove snapshots older than $max_snapshots days...\n";
+			    	$files = glob($pathtoapp.'snapshot/shift_db*.snapshot.tar')
+				  	foreach($files as $file){
+				    	if(is_file($file)){
+				      		if(time() - filemtime($file) >= 60 * 60 * 24 * $max_snapshots){
+				        		if(unlink($file)){
+				        			echo $date." - Deleted snapshot $file\n";
+				        		}
+				      		}
+				    	}
+				  	}
+
 			    echo $date." - Done!\n";
 			
 			}else{
 
 				echo $date." - No snapshot exists for today, I will create one for you now!\n";
 				passthru("cd $pathtoapp && ./shift-snapshot.sh create");
-				echo "Done!\n";
+				echo $date." - Done!\n";
 
 			}
 

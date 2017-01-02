@@ -157,8 +157,24 @@ echo $date." - Going to check for forked status now...\n";
     	echo $date." - Counter ($counter) + current count ($count) is not sufficient to restore from snapshot. Need: $max_count \n";
 
     	// If counter + current count equals 0 AND option $createsnapshot is true, create a new snapshot
-    	if(($counter + $count) == 0){
-    		echo ($counter + $count)."\n";
+    	if(($counter + $count) == 0 && $createsnapshot === true){
+    		
+    		echo $date." - It's safe to create a daily snapshot and the setting is enabled.\n";
+    		echo $date." - Let's check if a snapshot was already created today...\n";
+    		
+    		$snapshots = glob($pathtoapp.'snapshot/shift_db*.snapshot.tar');
+			if (!empty($snapshots)) {
+			
+			    // something exists
+			    print_r($snapshots);
+			
+			}else{
+
+				echo "No snapshot exists for today, I will create one for you now!\n";
+				// passthru("cd $pathtoapp && shift-snapshot.sh create");
+			
+			}
+
     	}
 
       }

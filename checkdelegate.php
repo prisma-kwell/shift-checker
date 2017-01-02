@@ -8,20 +8,20 @@
 /* GENERAL SETTINGS
 ____________________ */
 
-	$date			= date("Y-m-d H:i:s");					// Current date
-	$baseDir		= dirname(__FILE__)."/";				// Folder which contains THIS file
-	$lockfile		= "checkdelegate.lock";					// Name of our lock file
-	$database		= "check_fork.sqlite3";					// Database name to use
-	$table 			= "forks";								// Table name to use
-	$msg 			= "Failed to find common block with";	// Message that is printed when forked
+	$date			= date("Y-m-d H:i:s");				// Current date
+	$baseDir		= dirname(__FILE__)."/";			// Folder which contains THIS file
+	$lockfile		= "checkdelegate.lock";				// Name of our lock file
+	$database		= "check_fork.sqlite3";				// Database name to use
+	$table 			= "forks";					// Table name to use
+	$msg 			= "Failed to find common block with";		// Message that is printed when forked
 	$pathtoapp		= "/home/lepetitjan/shift/";			// Path to your Shift installation
 	$logfile 		= $pathtoapp."logs/shift.log";			// Needs to be a FULL path, so not ~/shift
-	$linestoread	= 50;									// How many lines to read from the end of $logfile
-	$max_count 		= 10;									// How may times $msg may occur
+	$linestoread		= 50;						// How many lines to read from the end of $logfile
+	$max_count 		= 10;						// How may times $msg may occur
 
 	// Snapshot settings
-	$createsnapshot	= true;
-	$max_snapshots	= 3;
+	$createsnapshot		= true;						// Do you want to create daily snapshots?
+	$max_snapshots		= 3;						// How many snapshots to preserve? (in days)
 
 /* PREREQUISITES
 ____________________ */
@@ -29,7 +29,8 @@ ____________________ */
 require('functions.php');
 
 // Let's start the output with a line for the log file
-	echo "___________________________________________________\n";
+echo "___________________________________________________\n";
+
 
 /* LOCK FILE
 ____________________ */

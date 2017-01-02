@@ -1,6 +1,6 @@
 # shift-checker
-This script checks the status of your Shiftnrg Delegate by using shift_manager.bash.<br>
-When status is not "OK" it will restart your delegate.
+This script checks the status of your Shiftnrg Delegate by using PHP.<br>
+Feel free to rewrite in Python or Bash. 
  
 This script will also check whether your node has forked or not.<br>
 When forked, it will stop Shift, restore to previous snapshot, and start Shift again.

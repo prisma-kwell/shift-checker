@@ -26,7 +26,7 @@ ____________________ */
 require('functions.php');
 
 // Let's start the output with a line for the log file
-	echo "_______________________________________\n";
+	echo "___________________________________________________\n";
 
 /* LOCK FILE
 ____________________ */
@@ -140,6 +140,11 @@ echo $date." - Going to check for forked status now...\n";
     	$db->exec($query) or die('Unable to plus the counter!');
 
     	echo $date." - Counter ($counter) + current count ($count) is not sufficient to restore from snapshot. Need: $max_count \n";
+
+    	// Check snapshot setting
+    	if($createsnapshot === false){
+    		echo $date." - Snapshot setting is disabled.\n";
+    	}
 
     	// If counter + current count equals 0 AND option $createsnapshot is true, create a new snapshot
     	if(($counter + $count) == 0 && $createsnapshot === true){

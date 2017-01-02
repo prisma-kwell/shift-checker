@@ -1,14 +1,14 @@
 # shift-checker
 Checks the status of your Shiftnrg delegate
 
-This script checks the status of your Shiftnrg Delegate by using shift_manager.bash
+This script checks the status of your Shiftnrg Delegate by using shift_manager.bash.<br>
 When status is not "OK" it will restart your delegate.
  
-This script will also check whether your node has forked or not. 
+This script will also check whether your node has forked or not.<br>
 When forked, it will stop Shift, restore to previous snapshot, and start Shift again.
   
-There are some echo lines in this file. 
-When you redirect output to a log file in your crontab, these lines will show up. 
+There are some echo lines in this file.<br>
+When you redirect output to a log file in your crontab, these lines will show up. <br>
 See section Example crontab for more information.
 
 Be sure to run this script after:
@@ -35,12 +35,12 @@ git clone https://github.com/jeeweevee/shift-checker.git
 ```
 
 ## Contact 
-* Twitter: @lepetitjan 
+* Twitter: [@lepetitjan](https://twitter.com/lepetitjan) 
 * Shiftnrg Slack: https://shiftnrg.slack.com/team/jan 
 
 ## Contributors
 Seatrips (create snapshot when status is okay)
-* Twitter: @seatrips
+* Twitter: [@seatrips<br>](https://twitter.com/seatrips)
 * Shiftnrg Slack: https://shiftnrg.slack.com/team/seatrips
 
 Mrgr (Shift snapshots)

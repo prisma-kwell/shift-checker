@@ -35,3 +35,7 @@ apt install php php-cli php-mbstring php-sqlite3
 Seatrips (create snapshot when status is okay)
 * Twitter: @seatrips
 * Shiftnrg Slack: https://shiftnrg.slack.com/team/seatrips
+
+Mrgr (Shift snapshots)
+* Shiftnrg Slack: https://shiftnrg.slack.com/team/mrgr
+* Github: https://github.com/mrgrshift

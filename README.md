@@ -12,14 +12,10 @@ Of course this requires shift-snapshot.sh:
 There are some echo lines in this file. 
 When you redirect output to a log file in your crontab, these lines will show up. 
 See section Example crontab for more information.
- 
-Extra note: 
+
 Be sure to run this script after:
-	- You have installed shift-snapshot
- 	- You have created a snapshot with shift-snapshot
- 
-Contact me on Twitter: @lepetitjan 
-or Shiftnrg Slack: https://shiftnrg.slack.com/team/jan 
+* You have installed shift-snapshot
+* You have created a snapshot with shift-snapshot
 
 ## Prerequisites
 Be sure that your php.ini allows passthru(). It's default that it does though, so just check if this script is not working.
@@ -31,3 +27,7 @@ apt install php php-cli php-mbstring php-sqlite3
 ```
 * * * * * php /scripts/checkdelegate.php >> /scripts/checkdelegate.log 2>&1
 ```
+
+## Contact 
+* Twitter: @lepetitjan 
+* Shiftnrg Slack: https://shiftnrg.slack.com/team/jan 

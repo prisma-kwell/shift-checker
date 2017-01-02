@@ -22,9 +22,16 @@ apt install php php-cli php-mbstring php-sqlite3
 ```
 * shift-snapshot.sh: https://github.com/mrgrshift/shift-snapshot
 
+## Installation
+```
+git clone https://github.com/jeeweevee/shift-checker.git
+```
+* Change settings inside checkdelegate.php to match your needs
+* Edit your crontab with the example below
+
 ## Example crontab
 ```
-* * * * * php /scripts/checkdelegate.php >> /scripts/checkdelegate.log 2>&1
+* * * * * php ~/shift-checker/checkdelegate.php >> ~/shift-checker/checkdelegate.log 2>&1
 ```
 
 ## Contact 

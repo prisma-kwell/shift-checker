@@ -160,7 +160,7 @@ echo $date." - Going to check for forked status now...\n";
 			    	print_r($snapshots)."\n";
 			    
 			    echo $date." - Going to remove snapshots older than $max_snapshots days...\n";
-			    	$files = glob($pathtoapp.'snapshot/shift_db*.snapshot.tar')
+			    	$files = glob($pathtoapp.'snapshot/shift_db*.snapshot.tar');
 				  	foreach($files as $file){
 				    	if(is_file($file)){
 				      		if(time() - filemtime($file) >= 60 * 60 * 24 * $max_snapshots){

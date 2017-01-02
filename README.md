@@ -21,6 +21,7 @@ apt install php php-cli php-mbstring php-sqlite3
 * shift-snapshot.sh: https://github.com/mrgrshift/shift-snapshot
 
 ## Installation
+You can clone this into every directory of your choosing. I usually just clone it into my home folder.
 ```
 git clone https://github.com/lepetitjan/shift-checker.git
 ```

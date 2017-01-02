@@ -14,10 +14,12 @@ ____________________ */
 	$database		= "check_fork.sqlite3";					// Database name to use
 	$table 			= "forks";								// Table name to use
 	$msg 			= "Failed to find common block with";	// Message that is printed when forked
-	$pathtoapp		= "/home/azureuser/shift/";				// Path to your Shift installation
+	$pathtoapp		= "/home/lepetitjan/shift/";			// Path to your Shift installation
 	$logfile 		= $pathtoapp."logs/shift.log";			// Needs to be a FULL path, so not ~/shift
 	$linestoread	= 50;									// How many lines to read from the end of $logfile
 	$max_count 		= 10;									// How may times $msg may occur
+
+	// Snapshot settings
 	$createsnapshot	= true;
 	$max_snapshots	= 3;
 
@@ -33,15 +35,15 @@ require('functions.php');
 ____________________ */
 
 // Check if lock file exists
-if (file_exists($lockfile)) {
+if (file_exists($baseDir.$lockfile)) {
 
 	// Check age of lock file and touch it if older than 10 minutes
-	if((time()-filectime($lockfile)) >= 600){
+	if((time()-filectime($baseDir.$lockfile)) >= 600){
 	
 		echo $date." - Lock file age is older than 10 minutes. Going to touch it and continue with the script.\n";
 		
 		if (!touch($lockfile)){
-		  exit("Error touching $lockfile\n");
+		  exit("Error touching $baseDir.$lockfile\n");
 		}
 
 	// If file is younger than 10 minutes, exit!
@@ -156,7 +158,7 @@ echo $date." - Going to check for forked status now...\n";
     		$snapshots = glob($pathtoapp.'snapshot/shift_db'.date("d-m-Y").'*.snapshot.tar');
 			if (!empty($snapshots)) {
 			
-			    echo $date." - A snapshot already exists:\n";
+			    echo $date." - A snapshot for today already exists:\n";
 			    	print_r($snapshots)."\n";
 			    
 			    echo $date." - Going to remove snapshots older than $max_snapshots days...\n";

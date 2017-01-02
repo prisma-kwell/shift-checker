@@ -9,7 +9,7 @@
 ____________________ */
 
 	$date			= date("Y-m-d H:i:s");					// Current date
-	$baseDir		= getcwd()."/";							// Folder which contains THIS file
+	$baseDir		= dirname(__FILE__)."/";				// Folder which contains THIS file
 	$lockfile		= "checkdelegate.lock";					// Name of our lock file
 	$database		= "check_fork.sqlite3";					// Database name to use
 	$table 			= "forks";								// Table name to use

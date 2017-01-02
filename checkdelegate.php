@@ -175,7 +175,7 @@ echo $date." - Going to check for forked status now...\n";
 			}else{
 
 				echo $date." - No snapshot exists for today, I will create one for you now!\n";
-				passthru("cd $pathtoapp && shift-snapshot.sh create");
+				passthru("cd $pathtoapp && ./shift-snapshot.sh create");
 				echo "Done!\n";
 
 			}

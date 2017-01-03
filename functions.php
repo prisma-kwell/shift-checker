@@ -1,11 +1,15 @@
 <?php
 
+// Tail function
 function tailCustom($filepath, $lines = 1, $adaptive = true) {
+
+	// Current date
+	$date = date("Y-m-d H:i:s");
 
 	// Open file
 	$f = @fopen($filepath, "rb");
 	//if ($f === false) return false;
-	if ($f === false) return "Unable to open file!\n";
+	if ($f === false) return $date." - [ FORKING ] Unable to open file!\n";
 
 	// Sets buffer size, according to the number of lines to retrieve.
 	// This gives a performance boost when reading a few lines from the file.
@@ -56,4 +60,41 @@ function tailCustom($filepath, $lines = 1, $adaptive = true) {
 	fclose($f);
 	return trim($output);
 
+}
+
+// Log rotation function
+function rotateLog($logfile, $max_logfiles=3, $logsize=10485760){
+
+	// Current date
+	$date = date("Y-m-d H:i:s");
+	
+	if(file_exists($logfile)){
+		
+		// Check if log file is bigger than $logsize
+		if(filesize($logfile) >= $logsize){
+			echo $date." - [ LOGFILES ] Log file exceeds size: $logsize. Let me rotate that for you...\n";
+			$rotate = passthru("gzip -c $logfile > $logfile.".time().".gz");
+			if($rotate){
+				echo $date." - [ LOGFILES ] Log file rotated.\n";
+			}
+		}else{
+			echo $date." - [ LOGFILES ] Log size has not reached the limit yet.\n";
+		}
+
+		// Clean up old log files
+		echo $date." - [ LOGFILES ] Cleaning up old log files...\n";
+			$logfiles = glob($logfile."*");
+		  	foreach($logfiles as $file){
+		    	if(is_file($file)){
+		      		if(time() - filemtime($file) >= 60 * 60 * 24 * $max_logfiles){
+		        		if(unlink($file)){
+		        			echo $date." - [ LOGFILES ] Deleted log file $file\n";
+		        		}
+		      		}
+		    	}
+		  	}
+
+	}else{
+		echo $date." - [ LOGFILES ] Cannot find a log file to rotate..";
+	}
 }

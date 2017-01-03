@@ -16,7 +16,7 @@ Be sure to run this script after:
 ## Prerequisites
 Be sure that your php.ini allows passthru(). It's default that it does though, so just check if this script is not working.
 ```
-apt install php php-cli php-mbstring php-sqlite3
+sudo apt install php php-cli php-mbstring php-sqlite3
 ```
 * shift-snapshot.sh: https://github.com/mrgrshift/shift-snapshot
 
@@ -30,7 +30,7 @@ git clone https://github.com/lepetitjan/shift-checker.git
 
 ## Example crontab
 ```
-* * * * * php ~/shift-checker/checkdelegate.php >> ~/shift-checker/checkdelegate.log 2>&1
+* * * * * php ~/shift-checker/checkdelegate.php >> ~/shift-checker/logs/checkdelegate.log 2>&1
 ```
 
 ## Contact 

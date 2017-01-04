@@ -73,12 +73,12 @@ function rotateLog($logfile, $max_logfiles=3, $logsize=10485760){
 		// Check if log file is bigger than $logsize
 		if(filesize($logfile) >= $logsize){
 			echo $date." - [ LOGFILES ] Log file exceeds size: $logsize. Let me rotate that for you...\n";
-			$rotate = passthru("gzip -c $logfile > $logfile.".time().".gz");
+			$rotate = passthru("gzip -c $logfile > $logfile.".time().".gz && rm $logfile");
 			if($rotate){
 				echo $date." - [ LOGFILES ] Log file rotated.\n";
 			}
 		}else{
-			echo $date." - [ LOGFILES ] Log size has not reached the limit yet.\n";
+			echo $date." - [ LOGFILES ] Log size has not reached the limit yet. (".filesize($logfile)."/$logsize)\n";
 		}
 
 		// Clean up old log files

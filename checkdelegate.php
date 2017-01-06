@@ -9,13 +9,13 @@
 ____________________ */
 
 	// You NEED to edit this value before running the script...
-	$pathtoapp		= "/home/lepetitjan/shift/";			// Path to your Shift installation
+	$homeDir		= "/home/lepetitjan/";		// Full path to your home folder	
 
 	// You may leave the settings below as they are...
 	$date			= date("Y-m-d H:i:s");				// Current date
+	$pathtoapp		= $homeDir."shift/";		// Full path to your shift installation	
 	$baseDir		= dirname(__FILE__)."/";			// Folder which contains THIS file
 	$lockfile		= $baseDir."checkdelegate.lock";		// Name of our lock file
-	
 	$database		= $baseDir."check_fork.sqlite3";		// Database name to use
 	$table 			= "forks";					// Table name to use
 	
@@ -25,6 +25,7 @@ ____________________ */
 	$max_count 		= 10;						// How may times $msg may occur
 
 	// Snapshot settings
+	$snapshotDir		= $homeDir."shift-snapshot/";			// Base folder of shift-snapshot
 	$createsnapshot		= true;						// Do you want to create daily snapshots?
 	$max_snapshots		= 3;						// How many snapshots to preserve? (in days)
 
@@ -139,7 +140,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
         echo $date." - [ FORKING ] Hit max_count. I am going to restore from a snapshot.\n";
 
        	passthru("cd $pathtoapp && forever stop app.js");
-       	passthru("cd $pathtoapp && echo y | ./shift-snapshot.sh restore");
+       	passthru("cd $snapshotDir && echo y | ./shift-snapshot.sh restore");
        	passthru("cd $pathtoapp && forever start app.js");
 
         echo $date." - [ FORKING ] Finally, I will reset the counter for you...\n";
@@ -166,14 +167,14 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
     		echo $date." - [ SNAPSHOT ] It's safe to create a daily snapshot and the setting is enabled.\n";
     		echo $date." - [ SNAPSHOT ] Let's check if a snapshot was already created today...\n";
     		
-    		$snapshots = glob($pathtoapp.'snapshot/shift_db'.date("d-m-Y").'*.snapshot.tar');
+    		$snapshots = glob($snapshotDir.'snapshot/shift_db'.date("d-m-Y").'*.snapshot.tar');
 			if (!empty($snapshots)) {
 			
 			    echo $date." - [ SNAPSHOT ] A snapshot for today already exists:\n";
 			    	print_r($snapshots)."\n";
 			    
 			    echo $date." - [ SNAPSHOT ] Going to remove snapshots older than $max_snapshots days...\n";
-			    	$files = glob($pathtoapp.'snapshot/shift_db*.snapshot.tar');
+			    	$files = glob($snapshotDir.'snapshot/shift_db*.snapshot.tar');
 				  	foreach($files as $file){
 				    	if(is_file($file)){
 				      		if(time() - filemtime($file) >= 60 * 60 * 24 * $max_snapshots){
@@ -189,7 +190,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 			}else{
 
 				echo $date." - [ SNAPSHOT ] No snapshot exists for today, I will create one for you now!\n";
-				passthru("cd $pathtoapp && ./shift-snapshot.sh create");
+				passthru("cd $snapshotDir && ./shift-snapshot.sh create");
 				echo $date." - [ SNAPSHOT ] Done!\n";
 
 			}

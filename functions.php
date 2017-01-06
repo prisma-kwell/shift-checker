@@ -95,6 +95,6 @@ function rotateLog($logfile, $max_logfiles=3, $logsize=10485760){
 		  	}
 
 	}else{
-		echo $date." - [ LOGFILES ] Cannot find a log file to rotate..";
+		echo $date." - [ LOGFILES ] Cannot find a log file to rotate..\n";
 	}
 }

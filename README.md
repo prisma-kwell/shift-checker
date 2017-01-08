@@ -32,6 +32,17 @@ git clone https://github.com/lepetitjan/shift-checker.git
 ```
 * * * * * php ~/shift-checker/checkdelegate.php >> ~/shift-checker/logs/checkdelegate.log 2>&1
 ```
+## Common errors
+Some users get the error:
+```
+sudo: no tty present and no askpass program specified
+```
+To fix it, follow these steps:
+```
+1. $ sudo nano /etc/sudoers.d/yourusername
+2. Insert this: yourusername ALL=(ALL) NOPASSWD:ALL
+```
+Now your user does not have to type a sudo password anymore when shift-snapshot asked for one.
 
 ## Contact 
 * Twitter: [@lepetitjan](https://twitter.com/lepetitjan) 

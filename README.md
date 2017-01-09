@@ -49,8 +49,8 @@ Now your user does not have to type a sudo password anymore when shift-snapshot 
 * Shiftnrg Slack: https://shiftnrg.slack.com/team/jan 
 
 ## Donations
-Do you like/use my script(s)? Please consider donating the amount of a cup of coffee :-)
-SHIFT: 7970982857025266480S
+Do you like/use my script(s)? Please consider donating the amount of a cup of coffee :-)<br>
+SHIFT: 7970982857025266480S<br>
 BTC: 1GbAWBiGyuybXJcjtyTvtH6hB5iezXNVdP
 
 ## Contributors

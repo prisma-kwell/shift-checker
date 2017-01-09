@@ -48,6 +48,11 @@ Now your user does not have to type a sudo password anymore when shift-snapshot 
 * Twitter: [@lepetitjan](https://twitter.com/lepetitjan) 
 * Shiftnrg Slack: https://shiftnrg.slack.com/team/jan 
 
+## Donations
+Do you like/use my script(s)? Please consider donating the amount of a cup of coffee :-)
+SHIFT: 7970982857025266480S
+BTC: 1GbAWBiGyuybXJcjtyTvtH6hB5iezXNVdP
+
 ## Contributors
 Seatrips (create snapshot when status is okay)
 * Twitter: [@seatrips<br>](https://twitter.com/seatrips)

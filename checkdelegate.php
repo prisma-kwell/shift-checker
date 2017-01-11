@@ -153,6 +153,10 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
     if (($counter + $count) >= $max_count) {
 
         echo $date." - [ FORKING ] Hit max_count. I am going to restore from a snapshot.\n";
+        	if($telegramEnable === true){
+   				$msg = "Hit max_count on ".gethostname().". I am going to restore from a snapshot.";
+   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+   			}
 
        	passthru("cd $pathtoapp && forever stop app.js");
        	passthru("cd $snapshotDir && echo y | ./shift-snapshot.sh restore");
@@ -205,8 +209,15 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 			}else{
 
 				echo $date." - [ SNAPSHOT ] No snapshot exists for today, I will create one for you now!\n";
-				passthru("cd $snapshotDir && ./shift-snapshot.sh create");
-				echo $date." - [ SNAPSHOT ] Done!\n";
+					$create = passthru("cd $snapshotDir && ./shift-snapshot.sh create");
+					if($create){
+						echo $date." - [ SNAPSHOT ] Done!\n";
+
+						if($telegramEnable === true){
+			   				$msg = "Created daily snapshot on ".gethostname().".";
+			   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+			   			}
+					}
 
 			}
 

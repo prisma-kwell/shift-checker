@@ -94,7 +94,7 @@ echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
    		echo $date." - [ STATUS ] Delegate not running/healthy. Let me restart it for you...\n";
    			if($telegramEnable === true){
    				$msg = "Delegate ".gethostname()." not running/healthy. I will restart it for you...";
-   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage");
+   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
    			}
    		echo $date." - [ STATUS ] Stopping all forever processes...\n";
    			passthru("forever stopall");

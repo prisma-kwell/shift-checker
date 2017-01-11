@@ -50,7 +50,7 @@ $telegramId = "12345678";
 $telegramApiKey 	= "1122334455:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs";
 ```
 * Edit the telegram toggle (true/false)
-* Search in your Telegram for user "ShiftCheckerBot" and start a converstion to enable communication between you two
+* Start a conversation with your bot (username) to enable communication between you two
 
 
 ## Common errors

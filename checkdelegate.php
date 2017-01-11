@@ -39,11 +39,6 @@ ____________________ */
 	$telegramApiKey 	= "324248543:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs"; // Your Telegram API key 
 	$telegramEnable 	= true; // Change to true to enable Telegram Bot
 	$telegramSendMessage = "https://api.telegram.org/bot".$telegramApiKey."/sendMessage"; // Full URL to post message
-	
-
-
-	// https://api.telegram.org/bot324248543:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs/sendMessage?chat_id=305852659&text=Test!
-	// curl -d 'chat_id=305852659&text=Test!' 'https://api.telegram.org/bot324248543:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs/sendMessage'
 
 /* PREREQUISITES
 ____________________ */

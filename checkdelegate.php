@@ -209,15 +209,23 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 			}else{
 
 				echo $date." - [ SNAPSHOT ] No snapshot exists for today, I will create one for you now!\n";
-					$create = passthru("cd $snapshotDir && ./shift-snapshot.sh create");
-					if($create){
-						echo $date." - [ SNAPSHOT ] Done!\n";
+					
+				ob_start();
+				$create = passthru("cd $snapshotDir && ./shift-snapshot.sh create");
+				$check_createoutput = ob_get_contents();
+				ob_end_clean();
 
-						if($telegramEnable === true){
-			   				$msg = "Created daily snapshot on ".gethostname().".";
-			   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
-			   			}
-					}
+				// If buffer contains "OK snapshot created successfully"
+				if(strpos($check_createoutput, 'OK snapshot created successfully') !== false){
+				
+			   		echo $date." - [ SNAPSHOT ] Done!\n";
+					
+					if($telegramEnable === true){
+		   				$msg = "Created daily snapshot on ".gethostname().".";
+		   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+		   			}
+
+				}
 
 			}
 

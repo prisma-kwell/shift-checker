@@ -34,6 +34,17 @@ ____________________ */
 	$max_logfiles		= 3;						// How many log files to preserve? (in days)  
 	$logsize 		= 10485760;					// Max file size, default is 10 MB
 
+	// Telegram Bot
+	$telegramId 		= "305852659"; // Your Telegram ID
+	$telegramApiKey 	= "324248543:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs"; // Your Telegram API key 
+	$telegramEnable 	= true; // Change to true to enable Telegram Bot
+	$telegramSendMessage = "https://api.telegram.org/bot".$telegramApiKey."/sendMessage"; // Full URL to post message
+	
+
+
+	// https://api.telegram.org/bot324248543:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs/sendMessage?chat_id=305852659&text=Test!
+	// curl -d 'chat_id=305852659&text=Test!' 'https://api.telegram.org/bot324248543:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs/sendMessage'
+
 /* PREREQUISITES
 ____________________ */
 
@@ -81,6 +92,10 @@ echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
    		
 	// Echo something to our log file
    		echo $date." - [ STATUS ] Delegate not running/healthy. Let me restart it for you...\n";
+   			if($telegramEnable === true){
+   				$msg = "Delegate ".gethostname()." not running/healthy. I will restart it for you...";
+   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage");
+   			}
    		echo $date." - [ STATUS ] Stopping all forever processes...\n";
    			passthru("forever stopall");
    		echo $date." - [ STATUS ] Starting Shift forever proces...\n";

@@ -32,6 +32,14 @@ git clone https://github.com/lepetitjan/shift-checker.git
 ```
 * * * * * php ~/shift-checker/checkdelegate.php >> ~/shift-checker/logs/checkdelegate.log 2>&1
 ```
+
+## Telegram bot
+Shift-Checker comes with a Telegram bot which will send you a message if anything requires your attention on your node. 
+* Go to: https://telegram.me/userinfobot
+* Write down your ID in config.json
+* Edit the telegram toggle (true/false)
+* Search in your Telegram for user "ShiftCheckerBot" and start a converstion to enable communication between you two
+
 ## Common errors
 Some users get the error:
 ```

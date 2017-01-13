@@ -32,6 +32,27 @@ git clone https://github.com/lepetitjan/shift-checker.git
 ```
 * * * * * php ~/shift-checker/checkdelegate.php >> ~/shift-checker/logs/checkdelegate.log 2>&1
 ```
+
+## Telegram bot
+Shift-Checker comes with Telegram functionality which will allow shfit-checker to send you a message if anything requires your attention. It's very easy to set up: 
+* Open Telegram and start a conversation with: <b>userinfobot</b>
+* Put your ID inside variable $telegramId. 
+```
+$telegramId = "12345678";
+```
+* Start a conversation with: <b>botfather</b>
+* Say: /newbot
+* Tell botfather your bot's name
+* Tell botfather your bot's username
+* Botfather will say "Congratulations!" and give you a token
+* Put your token inside variable $telegramApiKey. 
+```
+$telegramApiKey 	= "1122334455:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs";
+```
+* Edit the telegram toggle (true/false)
+* Start a conversation with your bot (username) to enable communication between you two
+
+
 ## Common errors
 Some users get the error:
 ```

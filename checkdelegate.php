@@ -34,6 +34,12 @@ ____________________ */
 	$max_logfiles		= 3;						// How many log files to preserve? (in days)  
 	$logsize 		= 10485760;					// Max file size, default is 10 MB
 
+	// Telegram Bot
+	$telegramId 		= ""; // Your Telegram ID
+	$telegramApiKey 	= ""; // Your Telegram API key 
+	$telegramEnable 	= false; // Change to true to enable Telegram Bot
+	$telegramSendMessage = "https://api.telegram.org/bot".$telegramApiKey."/sendMessage"; // Full URL to post message
+
 /* PREREQUISITES
 ____________________ */
 
@@ -81,6 +87,10 @@ echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
    		
 	// Echo something to our log file
    		echo $date." - [ STATUS ] Delegate not running/healthy. Let me restart it for you...\n";
+   			if($telegramEnable === true){
+   				$msg = "Delegate ".gethostname()." not running/healthy. I will restart it for you...";
+   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+   			}
    		echo $date." - [ STATUS ] Stopping all forever processes...\n";
    			passthru("forever stopall");
    		echo $date." - [ STATUS ] Starting Shift forever proces...\n";
@@ -138,6 +148,10 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
     if (($counter + $count) >= $max_count) {
 
         echo $date." - [ FORKING ] Hit max_count. I am going to restore from a snapshot.\n";
+        	if($telegramEnable === true){
+   				$msg = "Hit max_count on ".gethostname().". I am going to restore from a snapshot.";
+   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+   			}
 
        	passthru("cd $pathtoapp && forever stop app.js");
        	passthru("cd $snapshotDir && echo y | ./shift-snapshot.sh restore");
@@ -190,8 +204,23 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 			}else{
 
 				echo $date." - [ SNAPSHOT ] No snapshot exists for today, I will create one for you now!\n";
-				passthru("cd $snapshotDir && ./shift-snapshot.sh create");
-				echo $date." - [ SNAPSHOT ] Done!\n";
+					
+				ob_start();
+				$create = passthru("cd $snapshotDir && ./shift-snapshot.sh create");
+				$check_createoutput = ob_get_contents();
+				ob_end_clean();
+
+				// If buffer contains "OK snapshot created successfully"
+				if(strpos($check_createoutput, 'OK snapshot created successfully') !== false){
+				
+			   		echo $date." - [ SNAPSHOT ] Done!\n";
+					
+					if($telegramEnable === true){
+		   				$msg = "Created daily snapshot on ".gethostname().".";
+		   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+		   			}
+
+				}
 
 			}
 

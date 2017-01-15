@@ -98,3 +98,24 @@ function rotateLog($logfile, $max_logfiles=3, $logsize=10485760){
 		echo $date." - [ LOGFILES ] Cannot find a log file to rotate..\n";
 	}
 }
+
+// Get balance
+function getBalance($host, $address){
+	// Current date
+	$date = date("Y-m-d H:i:s");
+
+	if(!empty($host) $$ !empty($address)){
+		ob_start();
+	   	$getBal 		= passthru("curl -k -X GET '$host/api/accounts/getBalance?address=$address'");
+		$getBalOutput 	= ob_get_contents();
+		ob_end_clean();
+
+		if(!empty($getBalOutput)){
+			return $getBalOutput."\n";
+		}else{
+			return $date." - [ BALANCE ] Something went wrong whilst getting a balance.\n";
+		}
+	}else{
+		return $date." - [ BALANCE ] You forgot something...Did you enter a host and address?\n";
+	}
+}

@@ -12,33 +12,42 @@ ____________________ */
 	$homeDir		= "/home/lepetitjan/";		// Full path to your home folder	
 
 	// You may leave the settings below as they are...
-	$date			= date("Y-m-d H:i:s");				// Current date
-	$pathtoapp		= $homeDir."shift/";		// Full path to your shift installation	
-	$baseDir		= dirname(__FILE__)."/";			// Folder which contains THIS file
-	$lockfile		= $baseDir."checkdelegate.lock";		// Name of our lock file
-	$database		= $baseDir."check_fork.sqlite3";		// Database name to use
-	$table 			= "forks";					// Table name to use
+	$date				= date("Y-m-d H:i:s");				// Current date
+	$pathtoapp			= $homeDir."shift/";				// Full path to your shift installation	
+	$baseDir			= dirname(__FILE__)."/";			// Folder which contains THIS file
+	$lockfile			= $baseDir."checkdelegate.lock";	// Name of our lock file
+	$database			= $baseDir."check_fork.sqlite3";	// Database name to use
+	$table 				= "forks";							// Table name to use
 	
-	$msg 			= "Failed to find common block with";		// Message that is printed when forked
-	$shiftlog 		= $pathtoapp."logs/shift.log";			// Needs to be a FULL path, so not ~/shift
-	$linestoread		= 50;						// How many lines to read from the end of $shiftlog
-	$max_count 		= 10;						// How may times $msg may occur
+	$msg 				= "Failed to find common block with";	// Message that is printed when forked
+	$shiftlog 			= $pathtoapp."logs/shift.log";			// Needs to be a FULL path, so not ~/shift
+	$linestoread		= 50;									// How many lines to read from the end of $shiftlog
+	$max_count 			= 10;									// How may times $msg may occur
 
 	// Snapshot settings
-	$snapshotDir		= $homeDir."shift-snapshot/";			// Base folder of shift-snapshot
-	$createsnapshot		= true;						// Do you want to create daily snapshots?
-	$max_snapshots		= 3;						// How many snapshots to preserve? (in days)
+	$snapshotDir		= $homeDir."shift-snapshot/";	// Base folder of shift-snapshot
+	$createsnapshot		= true;							// Do you want to create daily snapshots?
+	$max_snapshots		= 3;							// How many snapshots to preserve? (in days)
 
 	// Log file rotation
-	$logfile 		= $baseDir."logs/checkdelegate.log";		// The location of your log file (see section crontab on Github)
-	$max_logfiles		= 3;						// How many log files to preserve? (in days)  
-	$logsize 		= 10485760;					// Max file size, default is 10 MB
+	$logfile 			= $baseDir."logs/checkdelegate.log";	// The location of your log file (see section crontab on Github)
+	$max_logfiles		= 3;									// How many log files to preserve? (in days)  
+	$logsize 			= 10485760;								// Max file size, default is 10 MB
 
 	// Telegram Bot
-	$telegramId 		= ""; // Your Telegram ID
-	$telegramApiKey 	= ""; // Your Telegram API key 
-	$telegramEnable 	= false; // Change to true to enable Telegram Bot
-	$telegramSendMessage = "https://api.telegram.org/bot".$telegramApiKey."/sendMessage"; // Full URL to post message
+	$telegramId 		= ""; 		// Your Telegram ID
+	$telegramApiKey 	= ""; 		// Your Telegram API key 
+	$telegramEnable 	= false; 	// Change to true to enable Telegram Bot
+	$telegramSendMessage= "https://api.telegram.org/bot".$telegramApiKey."/sendMessage"; // Full URL to post message
+
+	// Check delegate balance
+	$checkBalance		= false;							// Enable (true) or disable (false) the balance checker
+	$publicWallet 		= "https://wallet.shiftnrg.org";	// Address of a node to check your balance omitting final /
+	$myDelegate 		= "";								// SHIFT address of your delegate
+	$firstPass			= "";								// Passphrase of your delegate
+	$secondPass			= "";								// Your second passphrase if you have it..otherwise leave blank!
+	$myPrivateWallet	= "";								// SHIFT address of your private wallet
+	$maxBalance			= 10;								// Max of balance to keep in your delegate wallet
 
 /* PREREQUISITES
 ____________________ */
@@ -226,6 +235,32 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 
     	}
 
+      }
+
+// CHECK BALANCE AND SEND IF > $maxBalance
+      if($checkBalance === true){
+      	echo $date." - [ BALANCE ] Transfer balance option is ENABLED.\n";
+
+      	$myBalance = getBalance($nodeAddress, $myDelegate);
+      	if($myBalance > $maxBalance && !empty($myPrivateWallet) && !empty($firstPass)){
+      		echo $date." - [ BALANCE ] Balance ($myBalance) exceeds max ($maxBalance). I will transfer the balance to $myPrivateWallet.\n";
+      		
+      		ob_start();
+      		if(!empty($secondPass)){
+      			$transfer = passthru("curl -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"secondSecret\":\"$secondPass\",\"amount\":$myBalance,\"recipientId\":\"$myPrivateWallet\"}' $nodeAddress/api/transactions");
+      		}else{
+      			// 
+      			$transfer = passthru("curl -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"amount\":$myBalance,\"recipientId\":\"$myPrivateWallet\"}' $nodeAddress/api/transactions");
+      		}
+			$transfer_output = ob_get_contents();
+			ob_end_clean();
+
+			if($transfer_output){
+				echo $date." - [ BALANCE ] Transfer completed!";
+			}else{
+				echo $date." - [ BALANCE ] Transfer failed..";
+			}
+      	}
       }
 
 // Cleaning up your log file(s)

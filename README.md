@@ -52,6 +52,17 @@ $telegramApiKey 	= "1122334455:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs";
 * Edit the telegram toggle (true/false)
 * Start a conversation with your bot (username) to enable communication between you two
 
+## Transfer balance
+Shift-Checker now comes with the option to transfer the balance from your delegate to your private wallet when $maxBalance is reached.<br>
+```
+$checkBalance		= false;							// Enable (true) or disable (false) the balance checker
+$nodeAddress 		= "http://127.0.0.1:9305";			// Address of your node to check your balance and send transactions omitting final /
+$myDelegate 		= "";								// SHIFT address of your delegate
+$firstPass			= "";								// Passphrase of your delegate
+$secondPass			= "";								// Your second passphrase if you have it..otherwise leave blank!
+$myPrivateWallet	= "";								// SHIFT address of your private wallet
+$maxBalance			= 10;								// Max of balance to keep in your delegate wallet
+```
 
 ## Common errors
 Some users get the error:

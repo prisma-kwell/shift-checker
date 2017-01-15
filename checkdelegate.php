@@ -42,7 +42,7 @@ ____________________ */
 
 	// Check delegate balance
 	$checkBalance		= false;							// Enable (true) or disable (false) the balance checker
-	$publicWallet 		= "https://wallet.shiftnrg.org";	// Address of a node to check your balance omitting final /
+	$nodeAddress 		= "http://127.0.0.1:9305";			// Address of your node to check your balance and send transactions omitting final /
 	$myDelegate 		= "";								// SHIFT address of your delegate
 	$firstPass			= "";								// Passphrase of your delegate
 	$secondPass			= "";								// Your second passphrase if you have it..otherwise leave blank!
@@ -98,7 +98,7 @@ echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
    		echo $date." - [ STATUS ] Delegate not running/healthy. Let me restart it for you...\n";
    			if($telegramEnable === true){
    				$msg = "Delegate ".gethostname()." not running/healthy. I will restart it for you...";
-   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+   				passthru("curl -s -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
    			}
    		echo $date." - [ STATUS ] Stopping all forever processes...\n";
    			passthru("forever stopall");
@@ -159,7 +159,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
         echo $date." - [ FORKING ] Hit max_count. I am going to restore from a snapshot.\n";
         	if($telegramEnable === true){
    				$msg = "Hit max_count on ".gethostname().". I am going to restore from a snapshot.";
-   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+   				passthru("curl -s -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
    			}
 
        	passthru("cd $pathtoapp && forever stop app.js");
@@ -194,7 +194,9 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 			if (!empty($snapshots)) {
 			
 			    echo $date." - [ SNAPSHOT ] A snapshot for today already exists:\n";
-			    	print_r($snapshots)."\n";
+			    foreach($snapshots as $snapshot){
+			    	echo ">>> ".$snapshot."\n";
+			    }
 			    
 			    echo $date." - [ SNAPSHOT ] Going to remove snapshots older than $max_snapshots days...\n";
 			    	$files = glob($snapshotDir.'snapshot/shift_db*.snapshot.tar');
@@ -226,7 +228,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 					
 					if($telegramEnable === true){
 		   				$msg = "Created daily snapshot on ".gethostname().".";
-		   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+		   				passthru("curl -s -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
 		   			}
 
 				}
@@ -242,25 +244,34 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
       	echo $date." - [ BALANCE ] Transfer balance option is ENABLED.\n";
 
       	$myBalance = getBalance($nodeAddress, $myDelegate);
-      	if($myBalance > $maxBalance && !empty($myPrivateWallet) && !empty($firstPass)){
-      		echo $date." - [ BALANCE ] Balance ($myBalance) exceeds max ($maxBalance). I will transfer the balance to $myPrivateWallet.\n";
+      	if($myBalance > $maxBalance){
+      	  if(!empty($myPrivateWallet) && !empty($firstPass)){
+      		echo $date." - [ BALANCE ] Balance ($myBalance) exceeds max ($maxBalance). I will transfer ".floor(($myBalance -1) * 100000000)." to $myPrivateWallet.\n";
       		
       		ob_start();
       		if(!empty($secondPass)){
-      			$transfer = passthru("curl -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"secondSecret\":\"$secondPass\",\"amount\":$myBalance,\"recipientId\":\"$myPrivateWallet\"}' $nodeAddress/api/transactions");
+      			$transfer = passthru("curl -s -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"secondSecret\":\"$secondPass\",\"amount\":".floor(($myBalance -1) * 100000000).",\"recipientId\":\"$myPrivateWallet\"}' $nodeAddress/api/transactions");
       		}else{
-      			// 
-      			$transfer = passthru("curl -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"amount\":$myBalance,\"recipientId\":\"$myPrivateWallet\"}' $nodeAddress/api/transactions");
+      			$transfer = passthru("curl -s -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"amount\":".floor(($myBalance -1) * 100000000).",\"recipientId\":\"$myPrivateWallet\"}' $nodeAddress/api/transactions");
       		}
 			$transfer_output = ob_get_contents();
 			ob_end_clean();
 
-			if($transfer_output){
-				echo $date." - [ BALANCE ] Transfer completed!";
+			if(strpos($transfer_output, '"success":true') !== false){
+				$array = json_decode($transfer_output, true);
+				echo $date." - [ BALANCE ] Transfer completed! Transaction ID: ".$array['transactionId']."\n";
 			}else{
-				echo $date." - [ BALANCE ] Transfer failed..";
+				echo $transfer_output."\n";
+				echo $date." - [ BALANCE ] Transfer failed..\n";
 			}
+		  }else{
+		  	echo $date." - [ BALANCE ] Error! You did not enter a private address or forgot your passphrase.\n";
+		  }
+      	}else{
+      		echo $date." - [ BALANCE ] Balance has not reached it's max yet.\n";
       	}
+      }else{
+      	echo $date." - [ BALANCE ] Transfer balance option is DISABLED.\n";
       }
 
 // Cleaning up your log file(s)

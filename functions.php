@@ -104,14 +104,15 @@ function getBalance($host, $address){
 	// Current date
 	$date = date("Y-m-d H:i:s");
 
-	if(!empty($host) $$ !empty($address)){
+	if(!empty($host) && !empty($address)){
 		ob_start();
-	   	$getBal 		= passthru("curl -k -X GET '$host/api/accounts/getBalance?address=$address'");
+	   	$getBal 		= passthru("curl -s -k -X GET '$host/api/accounts/getBalance?address=$address'");
 		$getBalOutput 	= ob_get_contents();
 		ob_end_clean();
 
-		if(!empty($getBalOutput)){
-			return $getBalOutput."\n";
+		if(strpos($getBalOutput, '"success":true') !== false){
+			$array = json_decode($getBalOutput, true);
+			return ($array['balance'] / 100000000);
 		}else{
 			return $date." - [ BALANCE ] Something went wrong whilst getting a balance.\n";
 		}

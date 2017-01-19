@@ -22,7 +22,7 @@ ____________________ */
 	$msg 				= "Failed to find common block with";	// Message that is printed when forked
 	$shiftlog 			= $pathtoapp."logs/shift.log";			// Needs to be a FULL path, so not ~/shift
 	$linestoread		= 50;									// How many lines to read from the end of $shiftlog
-	$max_count 			= 10;									// How may times $msg may occur
+	$max_count 			= 5;									// How may times $msg may occur
 
 	// Snapshot settings
 	$snapshotDir		= $homeDir."shift-snapshot/";	// Base folder of shift-snapshot
@@ -48,6 +48,12 @@ ____________________ */
 	$secondPass			= "";								// Your second passphrase if you have it..otherwise leave blank!
 	$myPrivateWallet	= "";								// SHIFT address of your private wallet
 	$maxBalance			= 10;								// Max of balance to keep in your delegate wallet
+	$explorer			= "https://explorer.shiftnrg.org/";	// URL of explorer to use
+
+	// Donations
+	$donate				= true;								// Donate to thank me for this script? It saves money now you don't need a backup node, right? Only works if $checkBalance is enabled though..
+	$donateAddress		= "6440419179119733364S";			// Donation address
+	$donateAmount		= 10;								// Donation amount
 
 /* PREREQUISITES
 ____________________ */
@@ -248,6 +254,23 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
       	  if(!empty($myPrivateWallet) && !empty($firstPass)){
       		echo $date." - [ BALANCE ] Balance ($myBalance) exceeds max ($maxBalance). I will transfer ".floor(($myBalance -1) * 100000000)." to $myPrivateWallet.\n";
       		
+      		// Donate?
+      		if($donate === true){
+      			ob_start();
+	      		if(!empty($secondPass)){
+	      			$sendDonation = passthru("curl -s -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"secondSecret\":\"$secondPass\",\"amount\":".($donateAmount * 100000000).",\"recipientId\":\"$donateAddress\"}' $nodeAddress/api/transactions");
+	      		}else{
+	      			$sendDonation = passthru("curl -s -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"amount\":".($donateAmount * 100000000).",\"recipientId\":\"$donateAddress\"}' $nodeAddress/api/transactions");
+	      		}
+				$sendDonation_output = ob_get_contents();
+				ob_end_clean();
+      		
+				if(strpos($sendDonation_output, '"success":true') !== false){
+					$array = json_decode($sendDonation_output, true);
+					echo $date." - [ DONATION ] Thank you for your donation! Transaction ID: ".$array['transactionId']."\n";
+				}
+      		}
+
       		ob_start();
       		if(!empty($secondPass)){
       			$transfer = passthru("curl -s -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"secondSecret\":\"$secondPass\",\"amount\":".floor(($myBalance -1) * 100000000).",\"recipientId\":\"$myPrivateWallet\"}' $nodeAddress/api/transactions");
@@ -260,6 +283,12 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 			if(strpos($transfer_output, '"success":true') !== false){
 				$array = json_decode($transfer_output, true);
 				echo $date." - [ BALANCE ] Transfer completed! Transaction ID: ".$array['transactionId']."\n";
+
+				if($telegramEnable === true){
+	   				$msg = gethostname()." - Max balance reached. I transferred ".floor(($myBalance -1) * 100000000)." to $myPrivateWallet.\n
+	   				Transaction ID: ".$explorer."tx/".$array['transactionId'];
+	   				passthru("curl -s -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+	   			}
 			}else{
 				echo $transfer_output."\n";
 				echo $date." - [ BALANCE ] Transfer failed..\n";

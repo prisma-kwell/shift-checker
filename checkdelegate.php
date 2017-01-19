@@ -22,7 +22,7 @@ ____________________ */
 	$msg 			= "Failed to find common block with";		// Message that is printed when forked
 	$shiftlog 		= $pathtoapp."logs/shift.log";			// Needs to be a FULL path, so not ~/shift
 	$linestoread		= 50;						// How many lines to read from the end of $shiftlog
-	$max_count 		= 10;						// How may times $msg may occur
+	$max_count 		= 5;						// How may times $msg may occur
 
 	// Snapshot settings
 	$snapshotDir		= $homeDir."shift-snapshot/";			// Base folder of shift-snapshot

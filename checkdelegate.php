@@ -38,7 +38,7 @@ ____________________ */
 	$telegramId 		= ""; // Your Telegram ID
 	$telegramApiKey 	= ""; // Your Telegram API key 
 	$telegramEnable 	= false; // Change to true to enable Telegram Bot
-	$telegramSendMessage = "https://api.telegram.org/bot".$telegramApiKey."/sendMessage"; // Full URL to post message
+	$telegramSendMessage 	= "https://api.telegram.org/bot".$telegramApiKey."/sendMessage"; // Full URL to post message
 
 /* PREREQUISITES
 ____________________ */
@@ -154,7 +154,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
    			}
 
        	passthru("cd $pathtoapp && forever stop app.js");
-       	passthru("cd $snapshotDir && echo y | ./shift-snapshot.sh restore");
+       	passthru("cd $snapshotDir && echo y | bash shift-snapshot.sh restore");
        	passthru("cd $pathtoapp && forever start app.js");
 
         echo $date." - [ FORKING ] Finally, I will reset the counter for you...\n";
@@ -206,7 +206,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 				echo $date." - [ SNAPSHOT ] No snapshot exists for today, I will create one for you now!\n";
 					
 				ob_start();
-				$create = passthru("cd $snapshotDir && ./shift-snapshot.sh create");
+				$create = passthru("cd $snapshotDir && bash shift-snapshot.sh create");
 				$check_createoutput = ob_get_contents();
 				ob_end_clean();
 

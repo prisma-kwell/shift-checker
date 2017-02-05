@@ -9,7 +9,7 @@
 ____________________ */
 
 	// You NEED to edit this value before running the script...
-	$homeDir		= "/home/lepetitjan/";		// Full path to your home folder	
+	$homeDir			= "/home/lepetitjan/";				// Full path to your home folder	
 
 	// You may leave the settings below as they are...
 	$date				= date("Y-m-d H:i:s");				// Current date
@@ -19,10 +19,23 @@ ____________________ */
 	$database			= $baseDir."check_fork.sqlite3";	// Database name to use
 	$table 				= "forks";							// Table name to use
 	
+	// Let's fetch some values from the Shift config.json
+    $getConfig      	= json_decode(file_get_contents($pathtoapp."config.json"), true);
+    if(is_file($pathtoapp."config.json")){
+        $getVersion 	= $getConfig['version'];
+        $getLogFile 	= $getConfig['logFileName'];
+    }else{ echo $date." - Config file not found! Version check failed.\n"; }
+
 	$msg 				= "Failed to find common block with";	// Message that is printed when forked
-	$shiftlog 			= $pathtoapp."logs/shift.log";			// Needs to be a FULL path, so not ~/shift
+	$shiftlog 			= $pathtoapp.$getLogFile;				// Needs to be a FULL path, so not ~/shift
 	$linestoread		= 50;									// How many lines to read from the end of $shiftlog
-	$max_count 			= 5;									// How may times $msg may occur
+	$max_count 			= 3;									// How may times $msg may occur
+	
+	if($getVersion >= "6.1.1"){
+		$okayMsg = "√";											// 'Okay' message from shift_manager.bash
+	}else{
+		$okayMsg = "OK";
+	}
 
 	// Snapshot settings
 	$snapshotDir		= $homeDir."shift-snapshot/";	// Base folder of shift-snapshot
@@ -44,14 +57,14 @@ ____________________ */
 	$checkBalance		= false;							// Enable (true) or disable (false) the balance checker
 	$nodeAddress 		= "http://127.0.0.1:9305";			// Address of your node to check your balance and send transactions omitting final /
 	$myDelegate 		= "";								// SHIFT address of your delegate
-	$firstPass			= "";								// Passphrase of your delegate
+	$firstPass			= "";								// Passphrase/Secret of your delegate
 	$secondPass			= "";								// Your second passphrase if you have it..otherwise leave blank!
 	$myPrivateWallet	= "";								// SHIFT address of your private wallet
 	$maxBalance			= 10;								// Max of balance to keep in your delegate wallet
 	$explorer			= "https://explorer.shiftnrg.org/";	// URL of explorer to use
 
 	// Donations
-	$donate				= true;								// Donate to thank me for this script? It saves money now you don't need a backup node, right? Only works if $checkBalance is enabled though..
+	$donate				= true;								// Only works if $checkBalance is enabled
 	$donateAddress		= "6440419179119733364S";			// Donation address
 	$donateAmount		= 10;								// Donation amount
 
@@ -98,8 +111,8 @@ echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
 	ob_end_clean();
 
 // If status is not OK...
-   if(strpos($check_output, 'OK') === false){
-   		
+   if(strpos($check_output, $okayMsg) === false){
+   	echo $date." - Okay message: ".$okayMsg."\n";
 	// Echo something to our log file
    		echo $date." - [ STATUS ] Delegate not running/healthy. Let me restart it for you...\n";
    			if($telegramEnable === true){

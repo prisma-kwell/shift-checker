@@ -9,20 +9,33 @@
 ____________________ */
 
 	// You NEED to edit this value before running the script...
-	$homeDir		= "/home/lepetitjan/";		// Full path to your home folder	
+	$homeDir		= "/home/lepetitjan/";				// Full path to your home folder	
 
 	// You may leave the settings below as they are...
 	$date			= date("Y-m-d H:i:s");				// Current date
-	$pathtoapp		= $homeDir."shift/";		// Full path to your shift installation	
+	$pathtoapp		= $homeDir."shift/";				// Full path to your shift installation	
 	$baseDir		= dirname(__FILE__)."/";			// Folder which contains THIS file
 	$lockfile		= $baseDir."checkdelegate.lock";		// Name of our lock file
 	$database		= $baseDir."check_fork.sqlite3";		// Database name to use
 	$table 			= "forks";					// Table name to use
 	
+	// Let's fetch some values from the Shift config.json
+    	$getConfig      	= json_decode(file_get_contents($pathtoapp."config.json"), true);
+    	if(is_file($pathtoapp."config.json")){
+        	$getVersion 	= $getConfig['version'];
+        	$getLogFile 	= $getConfig['logFileName'];
+    	}else{ echo $date." - Config file not found! Version check failed.\n"; }
+
 	$msg 			= "Failed to find common block with";		// Message that is printed when forked
 	$shiftlog 		= $pathtoapp."logs/shift.log";			// Needs to be a FULL path, so not ~/shift
 	$linestoread		= 50;						// How many lines to read from the end of $shiftlog
 	$max_count 		= 5;						// How may times $msg may occur
+
+	if($getVersion >= "6.1.1"){
+		$okayMsg = "√";							// 'Okay' message from shift_manager.bash
+	}else{
+		$okayMsg = "OK";
+	}
 
 	// Snapshot settings
 	$snapshotDir		= $homeDir."shift-snapshot/";			// Base folder of shift-snapshot
@@ -35,9 +48,9 @@ ____________________ */
 	$logsize 		= 10485760;					// Max file size, default is 10 MB
 
 	// Telegram Bot
-	$telegramId 		= ""; // Your Telegram ID
-	$telegramApiKey 	= ""; // Your Telegram API key 
-	$telegramEnable 	= false; // Change to true to enable Telegram Bot
+	$telegramId 		= ""; 						// Your Telegram ID
+	$telegramApiKey 	= ""; 						// Your Telegram API key 
+	$telegramEnable 	= false; 					// Change to true to enable Telegram Bot
 	$telegramSendMessage 	= "https://api.telegram.org/bot".$telegramApiKey."/sendMessage"; // Full URL to post message
 
 /* PREREQUISITES
@@ -83,7 +96,7 @@ echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
 	ob_end_clean();
 
 // If status is not OK...
-   if(strpos($check_output, 'OK') === false){
+   if(strpos($check_output, $okayMsg) === false){
    		
 	// Echo something to our log file
    		echo $date." - [ STATUS ] Delegate not running/healthy. Let me restart it for you...\n";

@@ -111,8 +111,7 @@ echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
 	ob_end_clean();
 
 // If status is not OK...
-   if(strpos($check_output, $okayMsg) === false){
-   	echo $date." - Okay message: ".$okayMsg."\n";
+   	if(strpos($check_output, $okayMsg) === false){
 	// Echo something to our log file
    		echo $date." - [ STATUS ] Delegate not running/healthy. Let me restart it for you...\n";
    			if($telegramEnable === true){

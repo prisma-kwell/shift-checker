@@ -30,12 +30,7 @@ ____________________ */
 	$shiftlog 		= $pathtoapp."logs/shift.log";			// Needs to be a FULL path, so not ~/shift
 	$linestoread		= 50;						// How many lines to read from the end of $shiftlog
 	$max_count 		= 5;						// How may times $msg may occur
-
-	if($getVersion >= "6.1.1"){
-		$okayMsg = "√";							// 'Okay' message from shift_manager.bash
-	}else{
-		$okayMsg = "OK";
-	}
+	$okayMsg = "√";								// 'Okay' message from shift_manager.bash
 
 	// Snapshot settings
 	$snapshotDir		= $homeDir."shift-snapshot/";			// Base folder of shift-snapshot

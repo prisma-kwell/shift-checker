@@ -22,7 +22,6 @@ ____________________ */
 	// Let's fetch some values from the Shift config.json
     	$getConfig      	= json_decode(file_get_contents($pathtoapp."config.json"), true);
     	if(is_file($pathtoapp."config.json")){
-        	$getVersion 	= $getConfig['version'];
         	$getLogFile 	= $getConfig['logFileName'];
     	}else{ echo $date." - Config file not found! Version check failed.\n"; }
 

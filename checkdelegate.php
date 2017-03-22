@@ -95,8 +95,8 @@ echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
 	// Echo something to our log file
    		echo $date." - [ STATUS ] Delegate not running/healthy. Let me restart it for you...\n";
    			if($telegramEnable === true){
-   				$msg = "Delegate ".gethostname()." not running/healthy. I will restart it for you...";
-   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+   				$Tmsg = "Delegate ".gethostname()." not running/healthy. I will restart it for you...";
+   				passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
    			}
    		echo $date." - [ STATUS ] Stopping all forever processes...\n";
    			passthru("forever stopall");
@@ -156,8 +156,8 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 
         echo $date." - [ FORKING ] Hit max_count. I am going to restore from a snapshot.\n";
         	if($telegramEnable === true){
-   				$msg = "Hit max_count on ".gethostname().". I am going to restore from a snapshot.";
-   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+   				$Tmsg = "Hit max_count on ".gethostname().". I am going to restore from a snapshot.";
+   				passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
    			}
 
        	passthru("cd $pathtoapp && forever stop app.js");
@@ -223,8 +223,8 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 			   		echo $date." - [ SNAPSHOT ] Done!\n";
 					
 					if($telegramEnable === true){
-		   				$msg = "Created daily snapshot on ".gethostname().".";
-		   				passthru("curl -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+		   				$Tmsg = "Created daily snapshot on ".gethostname().".";
+		   				passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
 		   			}
 
 				}

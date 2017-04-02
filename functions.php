@@ -1,5 +1,10 @@
 <?php
-
+	/**
+	 * @author Jan
+	 * @link https://github.com/lepetitjan/shift-checker
+	 * @license https://github.com/lepetitjan/shift-checker/blob/master/LICENSE
+	 */
+	
 // Tail function
 function tailCustom($filepath, $lines = 1, $adaptive = true) {
 

@@ -25,7 +25,7 @@ You can clone this into every directory of your choosing. I usually just clone i
 ```
 git clone https://github.com/lepetitjan/shift-checker.git
 ```
-* Change settings inside checkdelegate.php to match your needs
+* Change settings inside config.php to match your needs
 * Edit your crontab with the example below
 
 ## Example crontab

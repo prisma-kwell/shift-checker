@@ -11,7 +11,7 @@
 	__________________________ */
 
 // You NEED to edit this value before running the script...
-	$homeDir		= "/home/lepetitjan/";				// Full path to your home folder	
+	$homeDir		= "/home/".get_current_user()."/";		// Full path to your home folder	
 
 // You may leave the settings below as they are...
 	$date			= date("Y-m-d H:i:s");				// Current date

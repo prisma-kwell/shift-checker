@@ -5,72 +5,9 @@
 	 * @license https://github.com/lepetitjan/shift-checker/blob/master/LICENSE
 	 */
 
-/* GENERAL SETTINGS
-____________________ */
-
-	// You NEED to edit this value before running the script...
-	$homeDir			= "/home/lepetitjan/";				// Full path to your home folder	
-
-	// You may leave the settings below as they are...
-	$date				= date("Y-m-d H:i:s");				// Current date
-	$pathtoapp			= $homeDir."shift/";				// Full path to your shift installation	
-	$baseDir			= dirname(__FILE__)."/";			// Folder which contains THIS file
-	$lockfile			= $baseDir."checkdelegate.lock";	// Name of our lock file
-	$database			= $baseDir."check_fork.sqlite3";	// Database name to use
-	$table 				= "forks";							// Table name to use
-	
-	// Let's fetch some values from the Shift config.json
-    $getConfig      	= json_decode(file_get_contents($pathtoapp."config.json"), true);
-    if(is_file($pathtoapp."config.json")){
-        $getVersion 	= $getConfig['version'];
-        $getLogFile 	= $getConfig['logFileName'];
-    }else{ echo $date." - Config file not found! Version check failed.\n"; }
-
-	$msg 				= "Failed to find common block with";	// Message that is printed when forked
-	$shiftlog 			= $pathtoapp.$getLogFile;				// Needs to be a FULL path, so not ~/shift
-	$linestoread		= 50;									// How many lines to read from the end of $shiftlog
-	$max_count 			= 3;									// How may times $msg may occur
-	
-	if($getVersion >= "6.1.1"){
-		$okayMsg = "√";											// 'Okay' message from shift_manager.bash
-	}else{
-		$okayMsg = "OK";
-	}
-
-	// Snapshot settings
-	$snapshotDir		= $homeDir."shift-snapshot/";	// Base folder of shift-snapshot
-	$createsnapshot		= true;							// Do you want to create daily snapshots?
-	$max_snapshots		= 3;							// How many snapshots to preserve? (in days)
-
-	// Log file rotation
-	$logfile 			= $baseDir."logs/checkdelegate.log";	// The location of your log file (see section crontab on Github)
-	$max_logfiles		= 3;									// How many log files to preserve? (in days)  
-	$logsize 			= 10485760;								// Max file size, default is 10 MB
-
-	// Telegram Bot
-	$telegramId 		= ""; 		// Your Telegram ID
-	$telegramApiKey 	= ""; 		// Your Telegram API key 
-	$telegramEnable 	= false; 	// Change to true to enable Telegram Bot
-	$telegramSendMessage= "https://api.telegram.org/bot".$telegramApiKey."/sendMessage"; // Full URL to post message
-
-	// Check delegate balance
-	$checkBalance		= false;							// Enable (true) or disable (false) the balance checker
-	$nodeAddress 		= "http://127.0.0.1:9305";			// Address of your node to check your balance and send transactions omitting final /
-	$myDelegate 		= "";								// SHIFT address of your delegate
-	$firstPass			= "";								// Passphrase/Secret of your delegate
-	$secondPass			= "";								// Your second passphrase if you have it..otherwise leave blank!
-	$myPrivateWallet	= "";								// SHIFT address of your private wallet
-	$maxBalance			= 10;								// Max of balance to keep in your delegate wallet
-	$explorer			= "https://explorer.shiftnrg.org/";	// URL of explorer to use
-
-	// Donations
-	$donate				= true;								// Only works if $checkBalance is enabled
-	$donateAddress		= "6440419179119733364S";			// Donation address
-	$donateAmount		= 10;								// Donation amount
-
 /* PREREQUISITES
 ____________________ */
-
+require('config.php');
 require('functions.php');
 
 // Let's start the output with a line for the log file
@@ -111,12 +48,13 @@ echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
 	ob_end_clean();
 
 // If status is not OK...
-   	if(strpos($check_output, $okayMsg) === false){
+   if(strpos($check_output, $okayMsg) === false){
+   		
 	// Echo something to our log file
    		echo $date." - [ STATUS ] Delegate not running/healthy. Let me restart it for you...\n";
    			if($telegramEnable === true){
-   				$msg = "Delegate ".gethostname()." not running/healthy. I will restart it for you...";
-   				passthru("curl -s -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+   				$Tmsg = "Delegate ".gethostname()." not running/healthy. I will restart it for you...";
+   				passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
    			}
    		echo $date." - [ STATUS ] Stopping all forever processes...\n";
    			passthru("forever stopall");
@@ -176,8 +114,8 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 
         echo $date." - [ FORKING ] Hit max_count. I am going to restore from a snapshot.\n";
         	if($telegramEnable === true){
-   				$msg = "Hit max_count on ".gethostname().". I am going to restore from a snapshot.";
-   				passthru("curl -s -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+   				$Tmsg = "Hit max_count on ".gethostname().". I am going to restore from a snapshot.";
+   				passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
    			}
 
        	passthru("cd $pathtoapp && forever stop app.js");
@@ -212,9 +150,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 			if (!empty($snapshots)) {
 			
 			    echo $date." - [ SNAPSHOT ] A snapshot for today already exists:\n";
-			    foreach($snapshots as $snapshot){
-			    	echo ">>> ".$snapshot."\n";
-			    }
+			    	print_r($snapshots)."\n";
 			    
 			    echo $date." - [ SNAPSHOT ] Going to remove snapshots older than $max_snapshots days...\n";
 			    	$files = glob($snapshotDir.'snapshot/shift_db*.snapshot.tar');
@@ -245,8 +181,8 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 			   		echo $date." - [ SNAPSHOT ] Done!\n";
 					
 					if($telegramEnable === true){
-		   				$msg = "Created daily snapshot on ".gethostname().".";
-		   				passthru("curl -s -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
+		   				$Tmsg = "Created daily snapshot on ".gethostname().".";
+		   				passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
 		   			}
 
 				}
@@ -257,63 +193,19 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 
       }
 
-// CHECK BALANCE AND SEND IF > $maxBalance
-      if($checkBalance === true){
-      	echo $date." - [ BALANCE ] Transfer balance option is ENABLED.\n";
+// Always-Forge functionality
+  /* 
+    - Check consensus of all $nodes
+    - Foreach node with a consensus lower than the highest consensus, disable forging
+    - Enable forging on the node with best consensus for all $secret
+  */
 
-      	$myBalance = getBalance($nodeAddress, $myDelegate);
-      	if($myBalance > $maxBalance){
-      	  if(!empty($myPrivateWallet) && !empty($firstPass)){
-      		echo $date." - [ BALANCE ] Balance ($myBalance) exceeds max ($maxBalance). I will transfer ".floor(($myBalance -1) * 100000000)." to $myPrivateWallet.\n";
-      		
-      		// Donate?
-      		if($donate === true){
-      			ob_start();
-	      		if(!empty($secondPass)){
-	      			$sendDonation = passthru("curl -s -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"secondSecret\":\"$secondPass\",\"amount\":".($donateAmount * 100000000).",\"recipientId\":\"$donateAddress\"}' $nodeAddress/api/transactions");
-	      		}else{
-	      			$sendDonation = passthru("curl -s -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"amount\":".($donateAmount * 100000000).",\"recipientId\":\"$donateAddress\"}' $nodeAddress/api/transactions");
-	      		}
-				$sendDonation_output = ob_get_contents();
-				ob_end_clean();
-      		
-				if(strpos($sendDonation_output, '"success":true') !== false){
-					$array = json_decode($sendDonation_output, true);
-					echo $date." - [ DONATION ] Thank you for your donation! Transaction ID: ".$array['transactionId']."\n";
-				}
-      		}
-
-      		ob_start();
-      		if(!empty($secondPass)){
-      			$transfer = passthru("curl -s -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"secondSecret\":\"$secondPass\",\"amount\":".floor(($myBalance -1) * 100000000).",\"recipientId\":\"$myPrivateWallet\"}' $nodeAddress/api/transactions");
-      		}else{
-      			$transfer = passthru("curl -s -k -H 'Content-Type: application/json' -X PUT -d '{\"secret\":\"$firstPass\",\"amount\":".floor(($myBalance -1) * 100000000).",\"recipientId\":\"$myPrivateWallet\"}' $nodeAddress/api/transactions");
-      		}
-			$transfer_output = ob_get_contents();
-			ob_end_clean();
-
-			if(strpos($transfer_output, '"success":true') !== false){
-				$array = json_decode($transfer_output, true);
-				echo $date." - [ BALANCE ] Transfer completed! Transaction ID: ".$array['transactionId']."\n";
-
-				if($telegramEnable === true){
-	   				$msg = gethostname()." - Max balance reached. I transferred ".floor(($myBalance -1) * 100000000)." to $myPrivateWallet.\n
-	   				Transaction ID: ".$explorer."tx/".$array['transactionId'];
-	   				passthru("curl -s -d 'chat_id=$telegramId&text=$msg' $telegramSendMessage > /dev/null");
-	   			}
-			}else{
-				echo $transfer_output."\n";
-				echo $date." - [ BALANCE ] Transfer failed..\n";
-			}
-		  }else{
-		  	echo $date." - [ BALANCE ] Error! You did not enter a private address or forgot your passphrase.\n";
-		  }
-      	}else{
-      		echo $date." - [ BALANCE ] Balance has not reached it's max yet.\n";
-      	}
-      }else{
-      	echo $date." - [ BALANCE ] Transfer balance option is DISABLED.\n";
-      }
+  // Check consensus of all $nodes
+    foreach($nodes as $node){
+      $consensus = json_decode(file_get_contents($node."/api/loader/status/sync"));
+      $consensus = $consensus['consensus'];
+      echo $date." - [ CONSENSUS ] Node $node: $consensus %\n";
+    }
 
 // Cleaning up your log file(s)
       echo $date." - [ LOGFILES ] Performing log rotation and cleanup...\n";

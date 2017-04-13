@@ -1,5 +1,10 @@
 <?php
-
+	/**
+	 * @author Jan
+	 * @link https://github.com/lepetitjan/shift-checker
+	 * @license https://github.com/lepetitjan/shift-checker/blob/master/LICENSE
+	 */
+	
 // Tail function
 function tailCustom($filepath, $lines = 1, $adaptive = true) {
 
@@ -99,24 +104,32 @@ function rotateLog($logfile, $max_logfiles=3, $logsize=10485760){
 	}
 }
 
-// Get balance
-function getBalance($host, $address){
-	// Current date
-	$date = date("Y-m-d H:i:s");
+// Disable forging
+function disableForging($server, $secret){
+	ob_start();
+	$check_status = passthru("curl -d 'secret=$secret' $server/api/delegates/forging/disable > /dev/null");
+	$check_output = ob_get_contents();
+	ob_end_clean();	
 
-	if(!empty($host) && !empty($address)){
-		ob_start();
-	   	$getBal 		= passthru("curl -s -k -X GET '$host/api/accounts/getBalance?address=$address'");
-		$getBalOutput 	= ob_get_contents();
-		ob_end_clean();
-
-		if(strpos($getBalOutput, '"success":true') !== false){
-			$array = json_decode($getBalOutput, true);
-			return ($array['balance'] / 100000000);
-		}else{
-			return $date." - [ BALANCE ] Something went wrong whilst getting a balance.\n";
-		}
+	// If status is not OK...
+	if(strpos($check_output, "success") === false){
+		return "error";
 	}else{
-		return $date." - [ BALANCE ] You forgot something...Did you enter a host and address?\n";
+		return "disabled";
+	}
+}
+
+// Enable forging
+function enableForging($server, $secret){
+	ob_start();
+	$check_status = passthru("curl -d 'secret=$secret' $server/api/delegates/forging/enable > /dev/null");
+	$check_output = ob_get_contents();
+	ob_end_clean();	
+
+	// If status is not OK...
+	if(strpos($check_output, "success") === false){
+		return "error";
+	}else{
+		return "enabled";
 	}
 }

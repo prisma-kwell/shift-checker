@@ -212,7 +212,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
       // Get public key of first secret
       $public = checkPublic($apiHost, $secret[0]);
       // Check if node is forging
-      $forging = checkForging($apiHost, $public);
+      $forging = checkForging($node, $public);
       // If it is...
       if($forging == true){
         echo $date." - [ CONSENSUS ] Node $node is forging.\n";

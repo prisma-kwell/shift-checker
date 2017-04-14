@@ -239,13 +239,15 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
           echo $date." - [ CONSENSUS ] Best node: "; print_r($best); echo "\n";
           // Foreach secret, enable forging on best node
           foreach($secret as $sec){
+            echo $date." - [ CONSENSUS ] Enabling forging on $best for secret: $sec\n";
             enableForging($best, $sec);
           }
           // Foreach secret, disable forging on other nodes
           foreach($nodes as $node){
             if($node != $best){
               foreach($secret as $sec){
-                enableForging($node, $sec);
+                echo $date." - [ CONSENSUS ] Disabling forging on $node for secret: $sec\n";
+                disableForging($node, $sec);
               }
             }
           }

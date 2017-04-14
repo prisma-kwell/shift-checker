@@ -247,11 +247,11 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
             enableForging($best, $sec);
           }
           // Foreach secret, disable forging on other nodes
-          foreach($nodes as $node){
-            if($node != $best){
+          foreach($nodes as $othernodes){
+            if($othernodes != $best){
               foreach($secret as $sec){
-                echo $date." - [ CONSENSUS ] Disabling forging on $node for secret: $sec\n";
-                disableForging($node, $sec);
+                echo $date." - [ CONSENSUS ] Disabling forging on $othernodes for secret: $sec\n";
+                disableForging($othernodes, $sec);
               }
             }
           }

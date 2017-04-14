@@ -29,9 +29,10 @@
 // Always-Forge settings
 	$apiHost 		= "http://127.0.0.1:9405";
 	$nodes			= array(
-		'http://127.0.0.1:9405',
-		'http://testnode1.shiftnrg.org:9405'
+		"http://127.0.0.1:9405",
+		"http://testnode1.shiftnrg.org:9405"
 	);
+	$threshold 		= 80; 						// Percentage of consensus threshold
 	if(is_file($pathtoapp."config.json")){
 		$getConfig  = json_decode(file_get_contents($pathtoapp."config.json"), true);
         $secret 	= $getConfig['forging']['secret'];

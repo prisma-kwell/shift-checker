@@ -195,16 +195,63 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 
 // Always-Forge functionality
   /* 
-    - Check consensus of all $nodes
+    - Foreach node, check if forging
+      - If forging, what is it's consensus?
+      - If consensus is lower than threshold (80%?):
+        - Check consensus of all $nodes
+        - Switch to node with higher consensus (if available)
     - Foreach node with a consensus lower than the highest consensus, disable forging
-    - Enable forging on the node with best consensus for all $secret
+  
+    Notes:
+      - Check forging:
+        4add3bd60807d944e5f391f834f22d59528208f47aca910ee4f1fc4660e00efa
   */
 
-  // Check consensus of all $nodes
+  // Foreach node
     foreach($nodes as $node){
-      $consensus = json_decode(file_get_contents($node."/api/loader/status/sync"));
-      $consensus = $consensus['consensus'];
-      echo $date." - [ CONSENSUS ] Node $node: $consensus %\n";
+      // Get public key of first secret
+      $public = checkPublic($apiHost, $secret[0]);
+      // Check if node is forging
+      $forging = checkForging($apiHost, $public);
+      // If it is...
+      if($forging == true){
+        echo $date." - [ CONSENSUS ] Node $node is forging.";
+        // Check consensus
+        $consensus = json_decode(file_get_contents($node."/api/loader/status/sync"), true);
+        $consensus = $consensus['consensus'];
+        echo $date." - [ CONSENSUS ] Consensus: $consensus %\n";
+        // If consensus is the same as or lower than the set threshold..
+        if($consensus <= $threshold){
+          echo $date." - [ CONSENSUS ] Threshold reached! Going to switch to another node for you..";
+          // Let's check which other node has the best consensus to switch to
+          $n=array();
+          foreach($nodes as $othernode){
+            if($othernode != $node){
+              // Add nodes and their consensus to an array
+              $consensus = json_decode(file_get_contents($node."/api/loader/status/sync"), true);
+              $consensus = $consensus['consensus'];
+              $n[$node] = $consensus;
+              echo $date." - [ CONSENSUS ] Node $node: $consensus %\n";
+            }
+          }
+          // Get the node with the highest consensus and enable forging for all secrets
+          $best = max(array_keys($n));
+          echo $date." - [ CONSENSUS ] Best node: "; print_r($best);
+          // Foreach secret, enable forging on best node
+          foreach($secret as $sec){
+            enableForging($best, $sec);
+          }
+          // Foreach secret, disable forging on other nodes
+          foreach($nodes as $node){
+            if($node != $best){
+              foreach($secret as $sec){
+                enableForging($node, $sec);
+              }
+            }
+          }
+
+        }
+      }
     }
 
 // Cleaning up your log file(s)

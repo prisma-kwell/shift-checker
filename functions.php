@@ -104,6 +104,36 @@ function rotateLog($logfile, $max_logfiles=3, $logsize=10485760){
 	}
 }
 
+// Check publicKey
+function checkPublic($server, $secret){
+	ob_start();
+	$check_public = passthru("curl -d 'secret=$secret' $server/api/accounts/open > /dev/null");
+	$check_public = ob_get_contents();
+	ob_end_clean();	
+
+	// If status is not OK...
+	if(strpos($check_public, "success") === false){
+		return "error";
+	}else{
+		return $check_public['publicKey'];
+	}
+}
+
+// Check forging
+function checkForging($server, $publicKey){
+	ob_start();
+	$check_forging = passthru("curl -XGET $server/api/delegates/forging/status?publicKey=$publicKey > /dev/null");
+	$check_forging = ob_get_contents();
+	ob_end_clean();	
+
+	// If status is not OK...
+	if(strpos($check_forging, "success") === false){
+		return "error";
+	}else{
+		return $check_forging['enabled'];
+	}
+}
+
 // Disable forging
 function disableForging($server, $secret){
 	ob_start();

@@ -222,7 +222,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
         echo $date." - [ CONSENSUS ] Consensus: $consensus %\n";
         // If consensus is the same as or lower than the set threshold..
         if($consensus <= $threshold){
-          echo $date." - [ CONSENSUS ] Threshold reached! Going to switch to another node for you..\n";
+          echo $date." - [ CONSENSUS ] Threshold on $node reached! Going to switch to another node for you..\n";
           // Let's check which other node has the best consensus to switch to
           $n=array();
           foreach($nodes as $othernode){

@@ -216,10 +216,20 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
       if($forging == true){
         echo $date." - [ CONSENSUS ] Node $node is forging.\n";
         
+        // Forging on other nodes should be disabled..
+        foreach($nodes as $othernodes){
+          if($othernodes != $node){
+            foreach($secret as $sec){
+              echo $date." - [ CONSENSUS ] Disabling forging on $othernodes for secret: $sec\n";
+              disableForging($othernodes, $sec);
+            }
+          }
+        }
+
         // Check consensus
         $consensus = json_decode(file_get_contents($node."/api/loader/status/sync"), true);
         $consensus = $consensus['consensus'];
-        echo $date." - [ CONSENSUS ] Consensus: $consensus %\n";
+        echo $date." - [ CONSENSUS ] Consensus $node: $consensus %\n";
         
         // If consensus is the same as or lower than the set threshold..
         if($consensus <= $threshold){
@@ -229,33 +239,26 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
           $n=array();
           foreach($nodes as $othernode){
             if($othernode != $node){
-              
               // Add nodes and their consensus to an array
               $consensus = json_decode(file_get_contents($othernode."/api/loader/status/sync"), true);
               $consensus = $consensus['consensus'];
               $n[$othernode] = $consensus;
               echo $date." - [ CONSENSUS ] Node $othernode: $consensus %\n";
-            
             }
           }
+          
           // Get the node with the highest consensus and enable forging for all secrets
           $best = max(array_keys($n));
           echo $date." - [ CONSENSUS ] Best node: "; print_r($best); echo "\n";
+          
           // Foreach secret, enable forging on best node
           foreach($secret as $sec){
             echo $date." - [ CONSENSUS ] Enabling forging on $best for secret: $sec\n";
             enableForging($best, $sec);
           }
-          // Foreach secret, disable forging on other nodes
-          foreach($nodes as $othernodes){
-            if($othernodes != $best){
-              foreach($secret as $sec){
-                echo $date." - [ CONSENSUS ] Disabling forging on $othernodes for secret: $sec\n";
-                disableForging($othernodes, $sec);
-              }
-            }
-          }
 
+        }else{
+          echo $date." - [ CONSENSUS ] Threshold on $node not reached yet.\n";
         }
       }
     }

@@ -213,7 +213,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
       $forging = checkForging($node, $public);
       
       // If it is...
-      if($forging == "true"){
+      if($forging == true){
         echo $date." - [ CONSENSUS ] Node $node is forging.\n";
         
         // Check consensus

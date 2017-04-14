@@ -193,7 +193,10 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 
       }
 
-// Always-Forge functionality
+  // Always-Forge functionality
+  echo $date." - [ CONSENSUS ] Checking if you enabled the consensus check...";
+  if($consensusEnable === true){
+    echo "yes!\n";
   /* 
     - Foreach node, check if forging
       - If forging, what is it's consensus?
@@ -260,8 +263,13 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
         }else{
           echo $date." - [ CONSENSUS ] Threshold on $node not reached yet.\n";
         }
+        break;
       }
     }
+  
+  }else{
+    echo "no!\n";
+  } // End $consensusEnable check
 
 // Cleaning up your log file(s)
       echo $date." - [ LOGFILES ] Performing log rotation and cleanup...\n";

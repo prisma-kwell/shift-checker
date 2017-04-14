@@ -27,10 +27,11 @@
 	$okayMsg 		= "√";						// 'Okay' message from shift_manager.bash
 
 // Always-Forge settings
+	$consensusEnable		= false;				// Enable consensus check? Be sure to check $nodes first..
 	$apiHost 		= "http://127.0.0.1:9405";
 	$nodes			= array(
 		"http://127.0.0.1:9405",
-		"http://testnode1.shiftnrg.org:9405" // Add your backup node here...
+		"http://testnode1.shiftnrg.org:9405" // Add your backup node here...the one mentioned is just for show!
 	);
 	$threshold 		= 80; 						// Percentage of consensus threshold
 	if(is_file($pathtoapp."config.json")){

@@ -200,38 +200,42 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
       - If consensus is lower than threshold (80%?):
         - Check consensus of all $nodes
         - Switch to node with higher consensus (if available)
-    - Foreach node with a consensus lower than the highest consensus, disable forging
-  
-    Notes:
-      - Check forging:
-        4add3bd60807d944e5f391f834f22d59528208f47aca910ee4f1fc4660e00efa
+    - Foreach other node disable forging
   */
 
   // Foreach node
     foreach($nodes as $node){
+      
       // Get public key of first secret
       $public = checkPublic($apiHost, $secret[0]);
+      
       // Check if node is forging
       $forging = checkForging($node, $public);
+      
       // If it is...
-      if($forging == true){
+      if($forging == "true"){
         echo $date." - [ CONSENSUS ] Node $node is forging.\n";
+        
         // Check consensus
         $consensus = json_decode(file_get_contents($node."/api/loader/status/sync"), true);
         $consensus = $consensus['consensus'];
         echo $date." - [ CONSENSUS ] Consensus: $consensus %\n";
+        
         // If consensus is the same as or lower than the set threshold..
         if($consensus <= $threshold){
           echo $date." - [ CONSENSUS ] Threshold on $node reached! Going to switch to another node for you..\n";
+        
           // Let's check which other node has the best consensus to switch to
           $n=array();
           foreach($nodes as $othernode){
             if($othernode != $node){
+              
               // Add nodes and their consensus to an array
-              $consensus = json_decode(file_get_contents($node."/api/loader/status/sync"), true);
+              $consensus = json_decode(file_get_contents($othernode."/api/loader/status/sync"), true);
               $consensus = $consensus['consensus'];
-              $n[$node] = $consensus;
-              echo $date." - [ CONSENSUS ] Node $node: $consensus %\n";
+              $n[$othernode] = $consensus;
+              echo $date." - [ CONSENSUS ] Node $othernode: $consensus %\n";
+            
             }
           }
           // Get the node with the highest consensus and enable forging for all secrets

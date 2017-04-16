@@ -135,10 +135,10 @@ function checkForging($server, $publicKey){
     $check = $check['enabled'];
 
 	// If forging is enabled..
-	if($check['enabled']){
-		return true;
+	if($check){
+		return "true";
 	}else{
-		return false;
+		return "false";
 	}
 }
 

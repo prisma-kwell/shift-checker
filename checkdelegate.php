@@ -220,7 +220,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
         $forging = checkForging($slavenode.":".$slaveport, $public);
         
         // If we are forging..
-        if($forging === true){
+        if($forging == "true"){
           // Do nothing
           echo $date." - [ CONSENSUS ] We are forging. All is fine.\n";
         }else{
@@ -241,7 +241,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
       $forging = checkForging($masternode.":".$masterport, $public);
 
       // If we are forging..
-      if($forging === true){
+      if($forging == "true"){
         echo $date." - [ CONSENSUS ] Master node is forging.\n";
 
         // Forging on the slave should be/stay disabled for every secret until we perform a consensus check.
@@ -307,7 +307,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
         // Check if the slave is forging
         $forging = checkForging($slavenode.":".$slaveport, $public);
         // If slave is forging..
-        if($forging === true){
+        if($forging == "true"){
           echo $date." - [ CONSENSUS ] Slave is forging. Going to check it's consensus..\n";
 
           // Check consensus on slave node

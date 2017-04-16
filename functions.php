@@ -131,16 +131,14 @@ function checkPublic($server, $secret){
 
 // Check forging
 function checkForging($server, $publicKey){
-	ob_start();
-	$check_forging = passthru("curl -s -XGET $server/api/delegates/forging/status?publicKey=$publicKey > /dev/null");
-	$check_forging = ob_get_contents();
-	ob_end_clean();	
+	$check = json_decode(file_get_contents("$server/api/delegates/forging/status?publicKey=$publicKey"), true);
+    $check = $check['enabled'];
 
-	// If status is not OK...
-	if(strpos($check_forging, "success") === false){
-		return "error";
+	// If forging is enabled..
+	if($check['enabled']){
+		return true;
 	}else{
-		return $check_forging['enabled'];
+		return false;
 	}
 }
 

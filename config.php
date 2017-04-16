@@ -31,7 +31,7 @@
     $master         = true;                                 // Is this your master node? True/False
     $masternode     = "http://127.0.0.1";                   // Master node
     $masterport     = 9405;                                 // Master port
-    $slavenode      = "http://testnode1.shiftnrg.org:9405"; // Slave node
+    $slavenode      = "http://testnode1.shiftnrg.org";      // Slave node
     $slaveport      = 9405;                                 // Slave port
     $threshold      = 50;                                   // Percentage of consensus threshold
     $apiHost        = $masternode.":".$masterport;          // Used to calculate $publicKey by $secret. Use $masternode or $slavenode

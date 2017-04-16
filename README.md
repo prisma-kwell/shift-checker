@@ -5,6 +5,9 @@ Feel free to rewrite in Python or Bash.
 This script will also check whether your node has forked or not.<br>
 When forked, it will stop Shift, restore to previous snapshot, and start Shift again.
   
+This script will also check your consensus and switch forging to your backup node.<br>
+When both nodes have a bad consensus, it will restart Shift and let you know by sending a Telegram message.
+
 There are some echo lines in this file.<br>
 When you redirect output to a log file in your crontab, these lines will show up. <br>
 See section Example crontab for more information.

@@ -233,8 +233,34 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
         
         // If we are forging..
         if($forging == "true"){
-          // Do nothing
-          echo $date." - [ CONSENSUS ] We are forging. All is fine.\n";
+          echo $date." - [ CONSENSUS ] We are forging. Checking consensus..\n";
+
+          // Perform a consensus check..
+          // Check consensus on slave node
+          $consensusSlave = json_decode(file_get_contents($slavenode.":".$slaveport."/api/loader/status/sync"), true);
+          $consensusSlave = $consensusSlave['consensus'];
+          echo $date." - [ CONSENSUS ] Consensus slave: $consensusSlave %\n";
+          
+          // If consensus on the slave is below threshold as well, send a telegram message and restart Shift!
+          if($consensusSlave <= $threshold){
+            echo $date." - [ CONSENSUS ] Threshold on slave node reached! Telegram: No healthy server online. Going to restart Shift for you..\n";
+            
+            // Send Telegram
+            if($telegramEnable === true){
+              $Tmsg = gethostname().": No healthy server online. Going to restart SHIFT for you..";
+              passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
+            }
+
+            // Restart Shift
+            echo $date." - [ CONSENSUS ] Stopping all forever processes...\n";
+              passthru("forever stopall");
+            echo $date." - [ CONSENSUS ] Starting Shift forever proces...\n";
+              passthru("cd $pathtoapp && forever start app.js");
+              
+          }else{
+            // All is fine. Do nothing..
+            echo $date." - [ CONSENSUS ] Consensus is fine!\n";
+          }
         }else{
           // Enable forging for each secret on the slave
           echo $date." - [ CONSENSUS ] We are not forging! Let's enable it..\n";

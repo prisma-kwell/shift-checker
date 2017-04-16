@@ -213,7 +213,19 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
       $up = ping(str_replace($find,"",$masternode), $masterport);
       if($up){
         // Master is online. Do nothing..
-        echo $date." - [ CONSENSUS ] Master is online. We won't do anything for now..\n";
+        echo $date." - [ CONSENSUS ] Master is online.\n";
+
+        // Check if we are forging
+        echo $date." - [ CONSENSUS ] Checking if we are forging..\n";
+        $forging = checkForging($slavenode.":".$slaveport, $public);
+        
+        // If we are forging..
+        if($forging == "true"){
+          echo $date." - [ CONSENSUS ] We are forging.\n";
+        }else{
+          echo $date." - [ CONSENSUS ] We are not forging.\n";
+        }
+
       }else{
         // Master is offline. Let's check if we are forging, if not; enable it. 
         echo $date." - [ CONSENSUS ] Master is offline! Let's check if we are forging..\n";

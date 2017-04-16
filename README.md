@@ -8,6 +8,21 @@ When forked, it will stop Shift, restore to previous snapshot, and start Shift a
 This script will also check your consensus and switch forging to your backup node.<br>
 When both nodes have a bad consensus, it will restart Shift and let you know by sending a Telegram message.
 
+<b>IMPORTANT TO MENTION</b>
+If you want to use the consensus controller, you need to add your secret(s) to config.php and remove them from your Shift config.json.
+Also, you have to give access to the forging API calls for both nodes. Like this (1.2.3.4 is the extra IP):
+```
+    "forging": {
+        "force": false,
+        "secret": [],
+        "access": {
+            "whiteList": [
+                "127.0.0.1","1.2.3.4",
+            ]
+        }
+    },
+```
+
 There are some echo lines in this file.<br>
 When you redirect output to a log file in your crontab, these lines will show up. <br>
 See section Example crontab for more information.

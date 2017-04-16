@@ -237,8 +237,13 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 
           // Perform a consensus check..
           // Check consensus on slave node
-          $consensusSlave = json_decode(file_get_contents($slavenode.":".$slaveport."/api/loader/status/sync"), true);
-          $consensusSlave = $consensusSlave['consensus'];
+          $consensusSlave = @file_get_contents($slavenode.":".$slaveport."/api/loader/status/sync");
+          if($consensusSlave === FALSE){
+            $consensusSlave = 0;
+          }else{
+            $consensusSlave = json_decode($consensusSlave, true);
+            $consensusSlave = $consensusSlave['consensus'];
+          }
           echo $date." - [ CONSENSUS ] Consensus slave: $consensusSlave %\n";
           
           // If consensus on the slave is below threshold as well, send a telegram message and restart Shift!
@@ -290,17 +295,27 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
         }
 
         // Check consensus on master node
-        $consensus = json_decode(file_get_contents($masternode.":".$masterport."/api/loader/status/sync"), true);
-        $consensus = $consensus['consensus'];
-        echo $date." - [ CONSENSUS ] Consensus master: $consensus %\n";
+        $consensusMaster = @file_get_contents($masternode.":".$masterport."/api/loader/status/sync");
+        if($consensusMaster === FALSE){
+          $consensusMaster = 0;
+        }else{
+          $consensusMaster = json_decode($consensusMaster, true);
+          $consensusMaster = $consensusMaster['consensus'];
+        }
+        echo $date." - [ CONSENSUS ] Consensus master: $consensusMaster %\n";
         
         // If consensus is the same as or lower than the set threshold..
-        if($consensus <= $threshold){
+        if($consensusMaster <= $threshold){
           echo $date." - [ CONSENSUS ] Threshold on master node reached! Going to check the slave node..\n";
         
           // Check consensus on slave node
-          $consensusSlave = json_decode(file_get_contents($slavenode.":".$slaveport."/api/loader/status/sync"), true);
-          $consensusSlave = $consensusSlave['consensus'];
+          $consensusSlave = @file_get_contents($slavenode.":".$slaveport."/api/loader/status/sync");
+          if($consensusSlave === FALSE){
+            $consensusSlave = 0;
+          }else{
+            $consensusSlave = json_decode($consensusSlave, true);
+            $consensusSlave = $consensusSlave['consensus'];
+          }
           echo $date." - [ CONSENSUS ] Consensus slave: $consensusSlave %\n";
           
           // If consensus on the slave is below threshold as well, send a telegram message and restart Shift!
@@ -349,8 +364,13 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
           echo $date." - [ CONSENSUS ] Slave is forging. Going to check it's consensus..\n";
 
           // Check consensus on slave node
-          $consensusSlave = json_decode(file_get_contents($slavenode.":".$slaveport."/api/loader/status/sync"), true);
-          $consensusSlave = $consensusSlave['consensus'];
+          $consensusSlave = @file_get_contents($slavenode.":".$slaveport."/api/loader/status/sync");
+          if($consensusSlave === FALSE){
+            $consensusSlave = 0;
+          }else{
+            $consensusSlave = json_decode($consensusSlave, true);
+            $consensusSlave = $consensusSlave['consensus'];
+          }
           echo $date." - [ CONSENSUS ] Consensus slave: $consensusSlave %\n";
 
           // If consensus is the same as or lower than the set threshold..
@@ -358,9 +378,14 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
             echo $date." - [ CONSENSUS ] Consensus slave reached the threshold. Checking consensus master node..\n";
 
             // Check consensus on master node
-            $consensus = json_decode(file_get_contents($masternode.":".$masterport."/api/loader/status/sync"), true);
-            $consensus = $consensus['consensus'];
-            echo $date." - [ CONSENSUS ] Consensus master: $consensus %\n";
+            $consensusMaster = @file_get_contents($masternode.":".$masterport."/api/loader/status/sync");
+            if($consensusMaster === FALSE){
+              $consensusMaster = 0;
+            }else{
+              $consensusMaster = json_decode($consensusMaster, true);
+              $consensusMaster = $consensusMaster['consensus'];
+            }
+            echo $date." - [ CONSENSUS ] Consensus master: $consensusMaster %\n";
             
             // If consensus is the same as or lower than the set threshold..
             if($consensus <= $threshold){
@@ -401,13 +426,23 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
           echo $date." - [ CONSENSUS ] Slave is not forging as well! Going to compare consensus and enable forging on best node..\n";
 
           // Check consensus on master node
-          $consensusMaster = json_decode(file_get_contents($masternode.":".$masterport."/api/loader/status/sync"), true);
-          $consensusMaster = $consensusMaster['consensus'];
+          $consensusMaster = @file_get_contents($masternode.":".$masterport."/api/loader/status/sync");
+          if($consensusMaster === FALSE){
+            $consensusMaster = 0;
+          }else{
+            $consensusMaster = json_decode($consensusMaster, true);
+            $consensusMaster = $consensusMaster['consensus'];
+          }
           echo $date." - [ CONSENSUS ] Consensus master: $consensusMaster %\n";
 
           // Check consensus on slave node
-          $consensusSlave = json_decode(file_get_contents($slavenode.":".$slaveport."/api/loader/status/sync"), true);
-          $consensusSlave = $consensusSlave['consensus'];
+          $consensusSlave = @file_get_contents($slavenode.":".$slaveport."/api/loader/status/sync");
+          if($consensusSlave === FALSE){
+            $consensusSlave = 0;
+          }else{
+            $consensusSlave = json_decode($consensusSlave, true);
+            $consensusSlave = $consensusSlave['consensus'];
+          }
           echo $date." - [ CONSENSUS ] Consensus slave: $consensusSlave %\n";
 
           // COMPARE CONSENSUS

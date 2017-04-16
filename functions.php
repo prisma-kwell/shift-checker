@@ -4,6 +4,16 @@
 	 * @link https://github.com/lepetitjan/shift-checker
 	 * @license https://github.com/lepetitjan/shift-checker/blob/master/LICENSE
 	 */
+
+// PING function..
+function ping($host,$port=80,$timeout=3) {
+    $fsock = fsockopen($host, $port, $errno, $errstr, $timeout);
+    if (!$fsock) {
+        return FALSE;
+    } else {
+        return TRUE;
+    }
+}
 	
 // Tail function
 function tailCustom($filepath, $lines = 1, $adaptive = true) {

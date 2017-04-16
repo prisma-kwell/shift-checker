@@ -35,13 +35,7 @@
     $slaveport      = 9405;                                 // Slave port
     $threshold      = 50;                                   // Percentage of consensus threshold
     $apiHost        = $masternode.":".$masterport;          // Used to calculate $publicKey by $secret. Use $masternode or $slavenode
-    if(is_file($pathtoapp."config.json")){                  // Get all secrets from the Shift config file
-        $getConfig  = json_decode(file_get_contents($pathtoapp."config.json"), true);
-        $secret     = $getConfig['forging']['secret'];
-    }else{ 
-        $secret     = ""; 
-        echo $date." - Config.json file not found. Failed to get your secret.\n";
-    }
+    $secret         = array("");                            // Add your secrets here. If you want to forge multiple, add extra to the array. 
 
 // Snapshot settings
     $snapshotDir    = $homeDir."shift-snapshot/";           // Base folder of shift-snapshot

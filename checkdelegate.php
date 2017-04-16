@@ -221,9 +221,9 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
         
         // If we are forging..
         if($forging == "true"){
-          echo "yes!";
+          echo "yes!\n";
         }else{
-          echo "no!";
+          echo "no!\n";
         }
 
       }else{

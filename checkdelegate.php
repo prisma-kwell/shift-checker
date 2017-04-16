@@ -216,14 +216,14 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
         echo $date." - [ CONSENSUS ] Master is online.\n";
 
         // Check if we are forging
-        echo $date." - [ CONSENSUS ] Checking if we are forging..\n";
+        echo $date." - [ CONSENSUS ] Checking if we are forging...";
         $forging = checkForging($slavenode.":".$slaveport, $public);
         
         // If we are forging..
         if($forging == "true"){
-          echo $date." - [ CONSENSUS ] We are forging.\n";
+          echo "yes!";
         }else{
-          echo $date." - [ CONSENSUS ] We are not forging.\n";
+          echo "no!";
         }
 
       }else{

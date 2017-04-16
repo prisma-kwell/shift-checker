@@ -43,7 +43,7 @@ echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
 
 // Check status with shift_manager.bash. Use PHP's ob_ function to create an output buffer
 	ob_start();
-   	$check_status = passthru("cd $pathtoapp && bash shift_manager.bash status | cut -z -b1-3");
+  $check_status = passthru("cd $pathtoapp && bash shift_manager.bash status | cut -z -b1-3");
 	$check_output = ob_get_contents();
 	ob_end_clean();
 
@@ -128,7 +128,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
     	$db->exec($query) or die("[ FORKING ] Unable to set counter to 0!");
 
 // If counter + current count is not greater than $max_count, add current count to our database...
-      } else {
+    } else {
 
 	    $query = "UPDATE $table SET counter=counter+$count, time=time()";
     	$db->exec($query) or die("[ FORKING ] Unable to plus the counter!");
@@ -147,7 +147,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
     		echo $date." - [ SNAPSHOT ] Let's check if a snapshot was already created today...\n";
     		
     		$snapshots = glob($snapshotDir.'snapshot/shift_db'.date("d-m-Y").'*.snapshot.tar');
-			if (!empty($snapshots)) {
+			  if (!empty($snapshots)) {
 			
 			    echo $date." - [ SNAPSHOT ] A snapshot for today already exists:\n";
 			    	print_r($snapshots)."\n";
@@ -166,32 +166,32 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 
 			    echo $date." - [ SNAPSHOT ] Done!\n";
 			
-			}else{
+			  }else{
 
-				echo $date." - [ SNAPSHOT ] No snapshot exists for today, I will create one for you now!\n";
-					
-				ob_start();
-				$create = passthru("cd $snapshotDir && ./shift-snapshot.sh create");
-				$check_createoutput = ob_get_contents();
-				ob_end_clean();
+  				echo $date." - [ SNAPSHOT ] No snapshot exists for today, I will create one for you now!\n";
+  					
+  				ob_start();
+  				$create = passthru("cd $snapshotDir && ./shift-snapshot.sh create");
+  				$check_createoutput = ob_get_contents();
+  				ob_end_clean();
 
-				// If buffer contains "OK snapshot created successfully"
-				if(strpos($check_createoutput, 'OK snapshot created successfully') !== false){
-				
-			   		echo $date." - [ SNAPSHOT ] Done!\n";
-					
-					if($telegramEnable === true){
-		   				$Tmsg = "Created daily snapshot on ".gethostname().".";
-		   				passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
-		   			}
+  				// If buffer contains "OK snapshot created successfully"
+  				if(strpos($check_createoutput, 'OK snapshot created successfully') !== false){
+  				
+  			   		echo $date." - [ SNAPSHOT ] Done!\n";
+  					
+  					if($telegramEnable === true){
+  		   				$Tmsg = "Created daily snapshot on ".gethostname().".";
+  		   				passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
+  		   			}
 
-				}
+  				}
 
-			}
+			  }
 
     	}
 
-      }
+    }
 
   // Consensus functionality
   echo $date." - [ CONSENSUS ] Checking if you enabled the consensus check...";

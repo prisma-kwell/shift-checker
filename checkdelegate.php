@@ -207,7 +207,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
       echo $date." - [ CONSENSUS ] We are a slave\n";
       
       // Check if the master is online
-      echo $date." - [ CONSENSUS ] Checking if master is online...\n";
+      echo $date." - [ CONSENSUS ] Checking if master is online...";
       
       $find = array("http://","https://");
       $up = ping(str_replace($find,"",$masternode), $masterport);

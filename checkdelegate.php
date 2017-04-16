@@ -207,16 +207,16 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
       echo $date." - [ CONSENSUS ] We are a slave\n";
       
       // Check if the master is online
-      echo $date." - [ CONSENSUS ] Checking if master is online..\n";
+      echo $date." - [ CONSENSUS ] Checking if master is online...\n";
       
       $find = array("http://","https://");
       $up = ping(str_replace($find,"",$masternode), $masterport);
       if($up){
         // Master is online. Do nothing..
-        echo $date." - [ CONSENSUS ] Master is online.\n";
+        echo "yes!\n";
 
         // Check if we are forging
-        echo $date." - [ CONSENSUS ] Checking if we are forging...";
+        echo $date." - [ CONSENSUS ] Checking if we (slave) are forging...";
         $forging = checkForging($slavenode.":".$slaveport, $public);
         
         // If we are forging..
@@ -228,12 +228,14 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 
       }else{
         // Master is offline. Let's check if we are forging, if not; enable it. 
-        echo $date." - [ CONSENSUS ] Master is offline! Let's check if we are forging..\n";
+        echo "no!\n";
+        echo $date." - [ CONSENSUS ] Let's check if we (slave) are forging...\n";
         $forging = checkForging($slavenode.":".$slaveport, $public);
         
         // If we are forging..
         if($forging == "true"){
-          echo $date." - [ CONSENSUS ] We are forging. Checking consensus..\n";
+          echo "yes!\n";
+          echo $date." - [ CONSENSUS ] Checking our consensus..\n";
 
           // Perform a consensus check..
           // Check consensus on slave node

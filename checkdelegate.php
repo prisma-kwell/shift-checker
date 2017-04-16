@@ -7,8 +7,8 @@
 
 /* PREREQUISITES
 ____________________ */
-require('config.php');
-require('functions.php');
+require('./config.php');
+require('./functions.php');
 
 // Let's start the output with a line for the log file
 echo "___________________________________________________\n";

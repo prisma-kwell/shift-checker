@@ -154,7 +154,7 @@ echo "\t\t\tGoing to check for forked status now...\n";
 			  if (!empty($snapshots)) {
 			
 			    echo "\t\t\tA snapshot for today already exists:\n";
-			    	print_r($snapshots)."\n";
+			    	echo $snapshots[0]."\n";
 			    
 			    echo "\t\t\tGoing to remove snapshots older than $max_snapshots days...\n";
 			    	$files = glob($snapshotDir.'snapshot/shift_db*.snapshot.tar');
@@ -483,3 +483,8 @@ echo $date." - [ CONSENSUS ]\n";
 echo $date." - [ LOGFILES ] \n";
   echo "\t\t\tPerforming log rotation and cleanup...\n";
   rotateLog($logfile, $max_logfiles, $logsize);
+
+// Remove lock file
+if(!unlink($lockfile)){
+  echo $date." - [ LOCKFILE ] Unable to remove lock file!\n";
+}

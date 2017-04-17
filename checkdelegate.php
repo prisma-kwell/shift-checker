@@ -12,7 +12,7 @@ require(dirname(__FILE__).'/functions.php');
 
 // Let's start the output with a line for the log file
 echo "___________________________________________________\n";
-
+echo $date."\n";
 
 /* LOCK FILE
 ____________________ */
@@ -43,7 +43,7 @@ if (file_exists($lockfile)) {
 
 /* CHECK STATUS
 ____________________ */
-echo $date." - [ STATUS ]\n";
+echo "[ STATUS ]\n";
 echo "\t\t\tLet's check if our delegate is still running...\n";
 
 // Check status with shift_manager.bash. Use PHP's ob_ function to create an output buffer
@@ -74,7 +74,7 @@ echo "\t\t\tLet's check if our delegate is still running...\n";
 
 /* CHECK IF FORKED
 ____________________ */
-echo $date." - [ FORKING ]\n";
+echo "[ FORKING ]\n";
 echo "\t\t\tGoing to check for forked status now...\n";
 
 // Set the database to save our counts to
@@ -199,7 +199,7 @@ echo "\t\t\tGoing to check for forked status now...\n";
 
 /* CHECK CONSENSUS
 ____________________ */
-echo $date." - [ CONSENSUS ]\n";
+echo "[ CONSENSUS ]\n";
 
   echo "\t\t\tChecking if you enabled the consensus check...";
   if($consensusEnable === true && !empty($secret)){
@@ -480,11 +480,11 @@ echo $date." - [ CONSENSUS ]\n";
   } // END: ENABLED CONSENSUS CHECK?
 
 // Cleaning up your log file(s)
-echo $date." - [ LOGFILES ] \n";
+echo "[ LOGFILES ] \n";
   echo "\t\t\tPerforming log rotation and cleanup...\n";
   rotateLog($logfile, $max_logfiles, $logsize);
 
 // Remove lock file
 if(!unlink($lockfile)){
-  echo $date." - [ LOCKFILE ] Unable to remove lock file!\n";
+  echo "[ LOCKFILE ] Unable to remove lock file!\n";
 }

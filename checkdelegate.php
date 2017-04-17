@@ -236,7 +236,7 @@ echo "[ CONSENSUS ]\n";
       }else{
         // Master is offline. Let's check if we are forging, if not; enable it. 
         echo "no!\n";
-        echo "\t\t\tLet's check if we (slave) are forging...\n";
+        echo "\t\t\tLet's check if we (slave) are forging...";
         $forging = checkForging($slavenode.":".$slaveport, $public);
         
         // If we are forging..

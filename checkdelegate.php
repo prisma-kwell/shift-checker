@@ -18,15 +18,15 @@ echo "___________________________________________________\n";
 ____________________ */
 
 // Check if lock file exists
-if (file_exists($baseDir.$lockfile)) {
+if (file_exists($lockfile)) {
 
 	// Check age of lock file and touch it if older than 10 minutes
-	if((time()-filectime($baseDir.$lockfile)) >= 600){
+	if((time()-filectime($lockfile)) >= 600){
 	
 		echo $date." - [ LOCKFILE ] Lock file is older than 10 minutes. Going to touch it and continue..\n";
 		
-		if (!touch($baseDir.$lockfile)){
-		  exit("[ LOCKFILE ] Error touching $baseDir.$lockfile\n");
+		if (!touch($lockfile)){
+		  exit("[ LOCKFILE ] Error touching $lockfile\n");
 		}
 
 	// If file is younger than 10 minutes, exit!
@@ -36,8 +36,8 @@ if (file_exists($baseDir.$lockfile)) {
 
 }else{
   // Lock file does not exist, let's touch it
-  if (!touch($baseDir.$lockfile)){
-    exit("[ LOCKFILE ] Error touching $baseDir.$lockfile\n");
+  if (!touch($lockfile)){
+    exit("[ LOCKFILE ] Error touching $lockfile\n");
   }
 }
 

@@ -7,8 +7,8 @@
 
 // PING function..
 function ping($host,$port=80,$timeout=3) {
-    $fsock = fsockopen($host, $port, $errno, $errstr, $timeout);
-    if (!$fsock) {
+    $fsock = @fsockopen($host, $port, $errno, $errstr, $timeout);
+    if (!is_resource($fsock)) {
         return FALSE;
     } else {
         return TRUE;

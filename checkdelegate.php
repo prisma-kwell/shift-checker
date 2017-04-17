@@ -25,7 +25,7 @@ if (file_exists($baseDir.$lockfile)) {
 	
 		echo $date." - [ LOCKFILE ] Lock file is older than 10 minutes. Going to touch it and continue..\n";
 		
-		if (!touch($lockfile)){
+		if (!touch($baseDir.$lockfile)){
 		  exit("[ LOCKFILE ] Error touching $baseDir.$lockfile\n");
 		}
 
@@ -34,12 +34,17 @@ if (file_exists($baseDir.$lockfile)) {
 		exit("[ LOCKFILE ] A previous job is still running...\n");
 	}
 
+}else{
+  // Lock file does not exist, let's touch it
+  if (!touch($baseDir.$lockfile)){
+    exit("[ LOCKFILE ] Error touching $baseDir.$lockfile\n");
+  }
 }
 
 /* CHECK STATUS
 ____________________ */
-
-echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
+echo $date." - [ STATUS ]\n";
+echo "\t\t\tLet's check if our delegate is still running...\n";
 
 // Check status with shift_manager.bash. Use PHP's ob_ function to create an output buffer
 	ob_start();
@@ -48,30 +53,29 @@ echo $date." - [ STATUS ] Let's check if our delegate is still running...\n";
 	ob_end_clean();
 
 // If status is not OK...
-   if(strpos($check_output, $okayMsg) === false){
+  if(strpos($check_output, $okayMsg) === false){
    		
-	// Echo something to our log file
-   		echo $date." - [ STATUS ] Delegate not running/healthy. Let me restart it for you...\n";
-   			if($telegramEnable === true){
-   				$Tmsg = "Delegate ".gethostname()." not running/healthy. I will restart it for you...";
-   				passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
-   			}
-   		echo $date." - [ STATUS ] Stopping all forever processes...\n";
-   			passthru("forever stopall");
-   		echo $date." - [ STATUS ] Starting Shift forever proces...\n";
-   			passthru("cd $pathtoapp && forever start app.js");
+	  // Echo something to our log file
+   	echo "\t\t\tDelegate not running/healthy. Let me restart it for you...\n";
+   	if($telegramEnable === true){
+   		$Tmsg = "Delegate ".gethostname()." not running/healthy. I will restart it for you...";
+   		passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
+   	}
+   	
+    echo "\t\t\tStopping all forever processes...\n";
+   		passthru("forever stopall");
+   	echo "\t\t\tStarting Shift forever proces...\n";
+   		passthru("cd $pathtoapp && forever start app.js");
    
-   }else{
-   
-   		echo $date." - [ STATUS ] Delegate is still running...\n";
-   
-   }
+  }else{
+  	echo "\t\t\tDelegate is still running...\n";
+  }
 
 
 /* CHECK IF FORKED
 ____________________ */
-
-echo $date." - [ FORKING ] Going to check for forked status now...\n";
+echo $date." - [ FORKING ]\n";
+echo "\t\t\tGoing to check for forked status now...\n";
 
 // Set the database to save our counts to
     $db = new SQLite3($database) or die("[ FORKING ] Unable to open database");
@@ -91,7 +95,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
     	if($numExists < 1){
         	
         	// Echo something to our log file
-        	echo $date." - [ FORKING ] No rows exist in our table to update the counter...Adding a row for you.\n";
+        	echo "\t\t\tNo rows exist in our table to update the counter...Adding a row for you.\n";
         	
         	$insert = "INSERT INTO $table (counter, time) VALUES ('0', time())";
         	$db->exec($insert) or die("[ FORKING ] Failed to add row!");
@@ -105,14 +109,14 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 	$count = substr_count($last, $msg);
 
 // Get counter value from our database
-    $check_count 	= $db->query("SELECT * FROM $table LIMIT 1");
+    $check_count 	  = $db->query("SELECT * FROM $table LIMIT 1");
     $row          	= $check_count->fetchArray();
     $counter      	= $row['counter'];
 
 // If counter + current count is greater than $max_count, take action...
     if (($counter + $count) >= $max_count) {
 
-        echo $date." - [ FORKING ] Hit max_count. I am going to restore from a snapshot.\n";
+        echo "\t\t\tHit max_count. I am going to restore from a snapshot.\n";
         	if($telegramEnable === true){
    				$Tmsg = "Hit max_count on ".gethostname().". I am going to restore from a snapshot.";
    				passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
@@ -122,10 +126,10 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
        	passthru("cd $snapshotDir && echo y | ./shift-snapshot.sh restore");
        	passthru("cd $pathtoapp && forever start app.js");
 
-        echo $date." - [ FORKING ] Finally, I will reset the counter for you...\n";
+        echo "\t\t\tFinally, I will reset the counter for you...\n";
 
         $query = "UPDATE $table SET counter='0', time=time()";
-    	$db->exec($query) or die("[ FORKING ] Unable to set counter to 0!");
+    	  $db->exec($query) or die("[ FORKING ] Unable to set counter to 0!");
 
 // If counter + current count is not greater than $max_count, add current count to our database...
     } else {
@@ -133,42 +137,42 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
 	    $query = "UPDATE $table SET counter=counter+$count, time=time()";
     	$db->exec($query) or die("[ FORKING ] Unable to plus the counter!");
 
-    	echo $date." - [ FORKING ] Counter ($counter) + current count ($count) is not sufficient to restore from snapshot. Need: $max_count \n";
+    	echo "\t\t\tCounter ($counter) + current count ($count) is not sufficient to restore from snapshot. Need: $max_count \n";
 
     	// Check snapshot setting
     	if($createsnapshot === false){
-    		echo $date." - [ SNAPSHOT ] Snapshot setting is disabled.\n";
+    		echo "\t\t\tSnapshot setting is disabled.\n";
     	}
 
-    	// If counter + current count equals 0 AND option $createsnapshot is true, create a new snapshot
-    	if(($counter + $count) == 0 && $createsnapshot === true){
+    	// If counter + current count are smaller than $max_count AND option $createsnapshot is true, create a new snapshot
+    	if(($counter + $count) < $max_count && $createsnapshot === true){
     		
-    		echo $date." - [ SNAPSHOT ] It's safe to create a daily snapshot and the setting is enabled.\n";
-    		echo $date." - [ SNAPSHOT ] Let's check if a snapshot was already created today...\n";
+    		echo "\t\t\tIt's safe to create a daily snapshot and the setting is enabled.\n";
+    		echo "\t\t\tLet's check if a snapshot was already created today...\n";
     		
     		$snapshots = glob($snapshotDir.'snapshot/shift_db'.date("d-m-Y").'*.snapshot.tar');
 			  if (!empty($snapshots)) {
 			
-			    echo $date." - [ SNAPSHOT ] A snapshot for today already exists:\n";
+			    echo "\t\t\tA snapshot for today already exists:\n";
 			    	print_r($snapshots)."\n";
 			    
-			    echo $date." - [ SNAPSHOT ] Going to remove snapshots older than $max_snapshots days...\n";
+			    echo "\t\t\tGoing to remove snapshots older than $max_snapshots days...\n";
 			    	$files = glob($snapshotDir.'snapshot/shift_db*.snapshot.tar');
 				  	foreach($files as $file){
 				    	if(is_file($file)){
 				      		if(time() - filemtime($file) >= 60 * 60 * 24 * $max_snapshots){
 				        		if(unlink($file)){
-				        			echo $date." - [ SNAPSHOT ] Deleted snapshot $file\n";
+				        			echo "\t\t\tDeleted snapshot $file\n";
 				        		}
 				      		}
 				    	}
 				  	}
 
-			    echo $date." - [ SNAPSHOT ] Done!\n";
+			    echo "\t\t\tDone!\n";
 			
 			  }else{
 
-  				echo $date." - [ SNAPSHOT ] No snapshot exists for today, I will create one for you now!\n";
+  				echo "\t\t\tNo snapshot exists for today, I will create one for you now!\n";
   					
   				ob_start();
   				$create = passthru("cd $snapshotDir && ./shift-snapshot.sh create");
@@ -178,7 +182,7 @@ echo $date." - [ FORKING ] Going to check for forked status now...\n";
   				// If buffer contains "OK snapshot created successfully"
   				if(strpos($check_createoutput, 'OK snapshot created successfully') !== false){
   				
-  			   		echo $date." - [ SNAPSHOT ] Done!\n";
+  			   		echo "\t\t\tDone!\n";
   					
   					if($telegramEnable === true){
   		   				$Tmsg = "Created daily snapshot on ".gethostname().".";
@@ -476,5 +480,6 @@ echo $date." - [ CONSENSUS ]\n";
   } // END: ENABLED CONSENSUS CHECK?
 
 // Cleaning up your log file(s)
-      echo $date." - [ LOGFILES ] Performing log rotation and cleanup...\n";
-      rotateLog($logfile, $max_logfiles, $logsize);
+echo $date." - [ LOGFILES ] \n";
+  echo "\t\t\tPerforming log rotation and cleanup...\n";
+  rotateLog($logfile, $max_logfiles, $logsize);

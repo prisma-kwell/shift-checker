@@ -5,13 +5,12 @@
      * @license https://github.com/lepetitjan/shift-checker/blob/master/LICENSE
      */
 
-/*  __________________________
+/*  GENERAL CONFIG
+__________________________ */
 
-          GENERAL CONFIG
-    __________________________ */
-
-// You NEED to edit this value before running the script...
-    $homeDir        = "/home/".get_current_user()."/";      // Full path to your home folder    
+// You should have installed Shift-Checker as normal user, so the line below should work by default.
+// However, if you installed as root (please don't..) change the path below to $homeDir = "/root/";
+    $homeDir        = "/home/".get_current_user()."/";
 
 // You may leave the settings below as they are...
     $date           = date("Y-m-d H:i:s");                  // Current date

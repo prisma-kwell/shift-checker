@@ -16,13 +16,13 @@ echo "\t\t\tLet's check if our delegate is still running...\n";
    	echo "\t\t\tDelegate not running/healthy. Let me restart it for you...\n";
    	if($telegramEnable === true){
    		$Tmsg = "Delegate ".gethostname()." not running/healthy. I will restart it for you...";
-   		passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
+   		passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage");
    	}
    	
     echo "\t\t\tStopping all forever processes...\n";
-   		passthru("forever stopall");
+   		passthru("forever stopall >/dev/null");
    	echo "\t\t\tStarting Shift forever proces...\n";
-   		passthru("cd $pathtoapp && forever start app.js");
+   		passthru("cd $pathtoapp && forever start app.js >/dev/null");
    
   }else{
   	echo "\t\t\tDelegate is still running...\n";

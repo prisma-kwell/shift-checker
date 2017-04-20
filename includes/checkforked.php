@@ -47,7 +47,7 @@ echo "\t\t\tGoing to check for forked status now...\n";
           echo "\t\t\tHit max_count. I am going to restore from a snapshot.\n";
           if($telegramEnable === true){
             $Tmsg = "Hit max_count on ".gethostname().". I am going to restore from a snapshot.";
-            passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
+            passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage >/dev/null");
           }
 
           // Perform snapshot restore
@@ -123,7 +123,7 @@ echo "\t\t\tGoing to check for forked status now...\n";
               
               if($telegramEnable === true){
                   $Tmsg = "Created daily snapshot on ".gethostname().".";
-                  passthru("curl -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage > /dev/null");
+                  passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage >/dev/null");
               }
 
             }

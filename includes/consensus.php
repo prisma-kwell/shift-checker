@@ -41,7 +41,7 @@ echo "[ CONSENSUS ]\n";
         // If Telegram is enabled, send a message that the master seems offline and we are going to take over forging (is possible)
         if($telegramEnable === true){
             $Tmsg = gethostname().": Master node seems offline. Going to take over forging on the slave.";
-            passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage");
+            passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage >/dev/null");
         }
 
         echo "\t\t\tLet's check if we (slave) are forging...";
@@ -70,7 +70,7 @@ echo "[ CONSENSUS ]\n";
             // Send Telegram
             if($telegramEnable === true){
               $Tmsg = gethostname().": No healthy server online. Going to restart SHIFT for you..";
-              passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage");
+              passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage >/dev/null");
             }
 
             // Restart Shift
@@ -128,7 +128,7 @@ echo "[ CONSENSUS ]\n";
           // If Telegram is enabled, send a message that the master seems offline and we are going to take over forging (is possible)
           if($telegramEnable === true){
               $Tmsg = gethostname().": Threshold reached on master node. Going to enable forging on the slave.";
-              passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage");
+              passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage >/dev/null");
           }
         
           // Check consensus on slave node
@@ -148,7 +148,7 @@ echo "[ CONSENSUS ]\n";
             // Send Telegram
             if($telegramEnable === true){
               $Tmsg = gethostname().": No healthy server online. Going to restart SHIFT for you..";
-              passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage");
+              passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage >/dev/null");
             }
 
             // Restart Shift
@@ -251,7 +251,7 @@ echo "[ CONSENSUS ]\n";
           // If Telegram is enabled, send a message that master and slave are both not forging and we're going to enable it on the best node
           if($telegramEnable === true){
               $Tmsg = gethostname().": Master and Slave are both not forging! Going to enable forging on the best node.";
-              passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage");
+              passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage >/dev/null");
           }
 
           // Check consensus on master node

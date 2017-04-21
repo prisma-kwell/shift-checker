@@ -211,7 +211,7 @@ echo "[ CONSENSUS ]\n";
             echo "\t\t\tConsensus master: $consensusMaster %\n";
             
             // If consensus is the same as or lower than the set threshold..
-            if($consensus <= $threshold){
+            if($consensusMaster <= $threshold){
               echo "\t\t\tThreshold on master node reached as well! Restarting Shift..\n";
 
               // Restart Shift

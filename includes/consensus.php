@@ -38,18 +38,19 @@ echo "[ CONSENSUS ]\n";
         // Master is offline. Let's check if we are forging, if not; enable it. 
         echo "no!\n";
 
-        // If Telegram is enabled, send a message that the master seems offline and we are going to take over forging (is possible)
-        if($telegramEnable === true){
-            $Tmsg = gethostname().": Master node seems offline. Going to take over forging on the slave.";
-            passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage >/dev/null");
-        }
-
         echo "\t\t\tLet's check if we (slave) are forging...";
         $forging = checkForging($slavenode.":".$slaveport, $public);
         
         // If we are forging..
         if($forging == "true"){
           echo "yes!\n";
+          
+          // If Telegram is enabled, send a message that the master seems offline
+          if($telegramEnable === true){
+              $Tmsg = gethostname().": Master node seems offline. Slave is forging though..";
+              passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage >/dev/null");
+          }
+
           echo "\t\t\tChecking our consensus..\n";
 
           // Perform a consensus check..
@@ -87,6 +88,12 @@ echo "[ CONSENSUS ]\n";
           // Enable forging for each secret on the slave
           echo "\t\t\tWe are not forging! Let's enable it..\n";
           
+          // If Telegram is enabled, send a message that the master seems offline
+          if($telegramEnable === true){
+              $Tmsg = gethostname().": Master node seems offline. Slave will enable forging now..";
+              passthru("curl -s -d 'chat_id=$telegramId&text=$Tmsg' $telegramSendMessage >/dev/null");
+          }
+
           foreach($secret as $sec){
             echo "\t\t\tEnabling forging on slave for secret: $sec\n";
             enableForging($slavenode.":".$slaveport, $sec);

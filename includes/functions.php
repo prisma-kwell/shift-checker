@@ -117,7 +117,7 @@ function rotateLog($logfile, $max_logfiles=3, $logsize=10485760){
 // Check publicKey
 function checkPublic($server, $secret){
 	ob_start();
-	$check_public = passthru("curl -s -d 'secret=$secret' $server/api/accounts/open");
+	$check_public = passthru("curl -s --connect-timeout 10 -d 'secret=$secret' $server/api/accounts/open");
 	$check_public = ob_get_contents();
 	ob_end_clean();	
 
@@ -133,7 +133,7 @@ function checkPublic($server, $secret){
 // Check forging
 function checkForging($server, $publicKey){
 	ob_start();
-	$check_forging = passthru("curl -s -XGET $server/api/delegates/forging/status?publicKey=$publicKey");
+	$check_forging = passthru("curl -s --connect-timeout 10 -XGET $server/api/delegates/forging/status?publicKey=$publicKey");
 	$check_forging = ob_get_contents();
 	ob_end_clean();	
 
@@ -153,7 +153,7 @@ function checkForging($server, $publicKey){
 // Disable forging
 function disableForging($server, $secret){
 	ob_start();
-	$check_status = passthru("curl -s -d 'secret=$secret' $server/api/delegates/forging/disable");
+	$check_status = passthru("curl -s --connect-timeout 10 -d 'secret=$secret' $server/api/delegates/forging/disable");
 	$check_output = ob_get_contents();
 	ob_end_clean();	
 
@@ -168,7 +168,7 @@ function disableForging($server, $secret){
 // Enable forging
 function enableForging($server, $secret){
 	ob_start();
-	$check_status = passthru("curl -s -d 'secret=$secret' $server/api/delegates/forging/enable > /dev/null");
+	$check_status = passthru("curl -s --connect-timeout 10 -d 'secret=$secret' $server/api/delegates/forging/enable > /dev/null");
 	$check_output = ob_get_contents();
 	ob_end_clean();	
 

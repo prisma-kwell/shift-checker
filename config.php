@@ -33,7 +33,7 @@ __________________________ */
     $slavenode      = "http://testnode1.shiftnrg.org";      // Slave node
     $slaveport      = 9405;                                 // Slave port
     $threshold      = 50;                                   // Percentage of consensus threshold
-    $apiHost        = $masternode.":".$masterport;          // Used to calculate $publicKey by $secret. Use $masternode or $slavenode
+    $apiHost        = "https://wallet.testnet.shiftnrg.org";// Used to calculate $publicKey by $secret. Use $masternode or $slavenode
     $secret         = array("");                            // Add your secrets here. If you want to forge multiple, add extra to the array. 
 
 // Snapshot settings

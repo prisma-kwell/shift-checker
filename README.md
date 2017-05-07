@@ -74,7 +74,7 @@ $telegramApiKey 	= "1122334455:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs";
 
 ## Contact 
 * Twitter: [@lepetitjan](https://twitter.com/lepetitjan) 
-* Shiftnrg Slack: https://shiftnrg.slack.com/team/jan 
+* ShiftNrg E-mail: [jan@shiftnrg.org](mailto:jan@shiftnrg.org) 
 
 ## Donations
 Do you like/use my script(s)? Please consider donating the amount of a cup of coffee :-)<br>

@@ -1,10 +1,30 @@
 # shift-checker
+Current version: 2.0
+
 This script checks the status of your Shiftnrg Delegate by using PHP.<br>
 Feel free to rewrite in Python or Bash. 
  
 This script will also check whether your node has forked or not.<br>
 When forked, it will stop Shift, restore to previous snapshot, and start Shift again.
   
+This script will also check your consensus and switch forging to your backup node.<br>
+When both nodes have a bad consensus, it will restart Shift and let you know by sending a Telegram message.
+
+<b>IMPORTANT TO MENTION</b>
+If you want to use the consensus controller, you need to add your secret(s) to config.php and remove them from your Shift config.json.
+Also, you have to give access to the forging API calls for both nodes. Like this (1.2.3.4 is the extra IP):
+```
+    "forging": {
+        "force": false,
+        "secret": [],
+        "access": {
+            "whiteList": [
+                "127.0.0.1","1.2.3.4",
+            ]
+        }
+    },
+```
+
 There are some echo lines in this file.<br>
 When you redirect output to a log file in your crontab, these lines will show up. <br>
 See section Example crontab for more information.
@@ -52,19 +72,6 @@ $telegramApiKey 	= "1122334455:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs";
 * Edit the telegram toggle (true/false)
 * Start a conversation with your bot (username) to enable communication between you two
 
-
-## Common errors
-Some users get the error:
-```
-sudo: no tty present and no askpass program specified
-```
-To fix it, follow these steps:
-```
-1. $ sudo nano /etc/sudoers.d/yourusername
-2. Insert this: yourusername ALL=(ALL) NOPASSWD:ALL
-```
-Now your user does not have to type a sudo password anymore when shift-snapshot asked for one.
-
 ## Contact 
 * Twitter: [@lepetitjan](https://twitter.com/lepetitjan) 
 * Shiftnrg Slack: https://shiftnrg.slack.com/team/jan 
@@ -77,7 +84,6 @@ BTC: 1GbAWBiGyuybXJcjtyTvtH6hB5iezXNVdP
 ## Contributors
 Seatrips (create snapshot when status is okay)
 * Twitter: [@seatrips<br>](https://twitter.com/seatrips)
-* Shiftnrg Slack: https://shiftnrg.slack.com/team/seatrips
 
 Mrgr (Shift snapshots)
 * Shiftnrg Slack: https://shiftnrg.slack.com/team/mrgr

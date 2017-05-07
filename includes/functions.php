@@ -4,6 +4,16 @@
 	 * @link https://github.com/lepetitjan/shift-checker
 	 * @license https://github.com/lepetitjan/shift-checker/blob/master/LICENSE
 	 */
+
+// PING function..
+function ping($host,$port=80,$timeout=3) {
+    $fsock = @fsockopen($host, $port, $errno, $errstr, $timeout);
+    if (!is_resource($fsock)) {
+        return FALSE;
+    } else {
+        return TRUE;
+    }
+}
 	
 // Tail function
 function tailCustom($filepath, $lines = 1, $adaptive = true) {
@@ -14,7 +24,7 @@ function tailCustom($filepath, $lines = 1, $adaptive = true) {
 	// Open file
 	$f = @fopen($filepath, "rb");
 	//if ($f === false) return false;
-	if ($f === false) return $date." - [ FORKING ] Unable to open file!\n";
+	if ($f === false) return "\t\t\tUnable to open file!\n";
 
 	// Sets buffer size, according to the number of lines to retrieve.
 	// This gives a performance boost when reading a few lines from the file.
@@ -80,26 +90,92 @@ function rotateLog($logfile, $max_logfiles=3, $logsize=10485760){
 			echo $date." - [ LOGFILES ] Log file exceeds size: $logsize. Let me rotate that for you...\n";
 			$rotate = passthru("gzip -c $logfile > $logfile.".time().".gz && rm $logfile");
 			if($rotate){
-				echo $date." - [ LOGFILES ] Log file rotated.\n";
+				echo "\t\t\tLog file rotated.\n";
 			}
 		}else{
-			echo $date." - [ LOGFILES ] Log size has not reached the limit yet. (".filesize($logfile)."/$logsize)\n";
+			echo "\t\t\tLog size has not reached the limit yet. (".filesize($logfile)."/$logsize)\n";
 		}
 
 		// Clean up old log files
-		echo $date." - [ LOGFILES ] Cleaning up old log files...\n";
+		echo "\t\t\tCleaning up old log files...\n";
 			$logfiles = glob($logfile."*");
 		  	foreach($logfiles as $file){
 		    	if(is_file($file)){
 		      		if(time() - filemtime($file) >= 60 * 60 * 24 * $max_logfiles){
 		        		if(unlink($file)){
-		        			echo $date." - [ LOGFILES ] Deleted log file $file\n";
+		        			echo "\t\t\tDeleted log file $file\n";
 		        		}
 		      		}
 		    	}
 		  	}
 
 	}else{
-		echo $date." - [ LOGFILES ] Cannot find a log file to rotate..\n";
+		echo "\t\t\tCannot find a log file to rotate..\n";
+	}
+}
+
+// Check publicKey
+function checkPublic($server, $secret){
+	ob_start();
+	$check_public = passthru("curl -s --connect-timeout 10 -d 'secret=$secret' $server/api/accounts/open");
+	$check_public = ob_get_contents();
+	ob_end_clean();	
+
+	// If status is not OK...
+	if(strpos($check_public, "success") === false){
+		return "error";
+	}else{
+		$check = json_decode($check_public, true);
+		return $check['account']['publicKey'];
+	}
+}
+
+// Check forging
+function checkForging($server, $publicKey){
+	ob_start();
+	$check_forging = passthru("curl -s --connect-timeout 10 -XGET $server/api/delegates/forging/status?publicKey=$publicKey");
+	$check_forging = ob_get_contents();
+	ob_end_clean();	
+
+	// If status is not OK...
+	if(strpos($check_forging, "success") === false){
+		return "error";
+	}else{
+		$check = json_decode($check_forging, true);
+		if($check['enabled']){
+			return "true";
+		}else{
+			return "false";
+		}
+	}
+}
+
+// Disable forging
+function disableForging($server, $secret){
+	ob_start();
+	$check_status = passthru("curl -s --connect-timeout 10 -d 'secret=$secret' $server/api/delegates/forging/disable");
+	$check_output = ob_get_contents();
+	ob_end_clean();	
+
+	// If status is not OK...
+	if(strpos($check_output, "success") === false){
+		return "error";
+	}else{
+		return "disabled";
+	}
+}
+
+// Enable forging
+function enableForging($server, $secret){
+	ob_start();
+	$check_status = passthru("curl -s --connect-timeout 10 -d 'secret=$secret' $server/api/delegates/forging/enable > /dev/null");
+	$check_output = ob_get_contents();
+	ob_end_clean();	
+
+	// If status is not OK...
+	if(strpos($check_output, "success") === false){
+		return "error";
+	}else{
+		return "enabled";
 	}
 }

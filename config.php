@@ -19,7 +19,7 @@ __________________________ */
 	$lockfile	= $baseDir."checkdelegate.lock";	// Name of our lock file
 	$database	= $baseDir."check_fork.sqlite3";	// Database name to use
 	$table 		= "forks";				// Table name to use
-	$msg 		= "Fork ";	// Message that is printed when forked
+	$msg 		= "\"cause\":3";			// Message that is printed when forked
 	$shiftlog 	= $pathtoapp."logs/shift.log";		// Needs to be a FULL path, so not ~/shift
 	$linestoread	= 30;					// How many lines to read from the end of $shiftlog
 	$max_count 	= 3;					// How may times $msg may occur

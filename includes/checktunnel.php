@@ -17,7 +17,7 @@ else{
 //Do this if it is closed
 	echo( "Restarting Tunnel\n" );
 
-	passthru("ssh -f -N -q -$sshPort  -i ~/rsa.pvt -L $localPort:localhost:$remotePort slave@$tunnelIP >> /dev/null");
+	passthru("ssh -f -N -q -p$sshPort  -i ~/rsa.pvt -L $localPort:localhost:$remotePort slave@$tunnelIP >> /dev/null");
 }
 	
 }

@@ -60,8 +60,8 @@ __________________________ */
 	$ipfsEnable     = false;                                //will start ipfs
 
 	$dappEnable     = false;                                //will start a dapp for you
-	$dappID         = ;                                     //id of your dapp
-	$massPass       = ;                                     //dapp enable password
+	$dappID         = "";                                     //id of your dapp
+	$massPass       = "";                                     //dapp enable password
 
 // Telegram Bot
 	$telegramId 	= ""; 					// Your Telegram ID

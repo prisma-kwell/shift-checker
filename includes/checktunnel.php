@@ -5,7 +5,7 @@ if($tunnelEnable === true){
 
 $ip = "http://127.0.0.1"; //IP or web addy
 
-echo("checking tunnel....   "); 
+echo("\t\t\tchecking tunnel....   "); 
 $find = array("http://","https://");
       $up = ping(str_replace($find,"",$masternode), $localPort); 
 //Do this if it is open

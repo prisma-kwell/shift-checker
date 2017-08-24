@@ -25,6 +25,10 @@ ____________________ */
 ____________________ */
   include dirname(__FILE__).'/includes/checkforked.php';
 
+/* CHECK TUNNEL
+_____________________*/
+  include dirname(__FILE__).'/includes/checktunnel.php';
+
 /* CHECK CONSENSUS
 ____________________ */
   include dirname(__FILE__).'/includes/consensus.php';

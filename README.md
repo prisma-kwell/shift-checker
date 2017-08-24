@@ -46,9 +46,13 @@ You can clone this into every directory of your choosing. I usually just clone i
 git clone https://github.com/lepetitjan/shift-checker.git
 ```
 *Createslavekey.sh must be run with sudo, and only on slave, it makes a user called slave and sets up the authentication keys. 
+
 *Then you move rsa.pvt thats in your home folder to master server home folder. 
+
 *You must chmod 400 rsa.pvt once in masters home folder. then just setup config.php and your ready to go.
+
 * Change settings inside config.php to match your needs
+
 * Edit your crontab with the example below
 
 ## Example crontab

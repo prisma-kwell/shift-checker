@@ -44,7 +44,7 @@ __________________________ */
 	$slavenode      = "http://127.0.0.1";                   // Slave node
 	$slaveport      = $localPort;                           // Slave port
 	$threshold      = 50;                                   // Percentage of consensus threshold
-	$apiHost        = "http:127.0.0.1:".$masterport;	// Used to calculate $publicKey by $secret. Use the server your currently on so your secret stays at this server
+	$apiHost        = "http://127.0.0.1:".$masterport;	// Used to calculate $publicKey by $secret. Use the server your currently on so your secret stays at this server
 	$secret         = array("");                            // Add your secrets here. If you want to forge multiple, add extra to the array. 
 
 // Snapshot settings

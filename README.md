@@ -1,4 +1,6 @@
 # shift-checker
+Current version: 2.0
+
 This script checks the status of your Shiftnrg Delegate by using PHP.<br>
 Feel free to rewrite in Python or Bash. 
  
@@ -70,22 +72,9 @@ $telegramApiKey 	= "1122334455:AAEhBOweik6ad9r_QXMENQjcrGbqCr4K-bs";
 * Edit the telegram toggle (true/false)
 * Start a conversation with your bot (username) to enable communication between you two
 
-
-## Common errors
-Some users get the error:
-```
-sudo: no tty present and no askpass program specified
-```
-To fix it, follow these steps:
-```
-1. $ sudo nano /etc/sudoers.d/yourusername
-2. Insert this: yourusername ALL=(ALL) NOPASSWD:ALL
-```
-Now your user does not have to type a sudo password anymore when shift-snapshot asked for one.
-
 ## Contact 
 * Twitter: [@lepetitjan](https://twitter.com/lepetitjan) 
-* Shiftnrg Slack: https://shiftnrg.slack.com/team/jan 
+* ShiftNrg E-mail: [jan@shiftnrg.org](mailto:jan@shiftnrg.org) 
 
 ## Donations
 Do you like/use my script(s)? Please consider donating the amount of a cup of coffee :-)<br>
@@ -95,7 +84,6 @@ BTC: 1GbAWBiGyuybXJcjtyTvtH6hB5iezXNVdP
 ## Contributors
 Seatrips (create snapshot when status is okay)
 * Twitter: [@seatrips<br>](https://twitter.com/seatrips)
-* Shiftnrg Slack: https://shiftnrg.slack.com/team/seatrips
 
 Mrgr (Shift snapshots)
 * Shiftnrg Slack: https://shiftnrg.slack.com/team/mrgr

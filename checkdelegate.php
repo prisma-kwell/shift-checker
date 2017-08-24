@@ -1,9 +1,9 @@
 <?php
-	/**
-	 * @author Jan
-	 * @link https://github.com/lepetitjan/shift-checker
-	 * @license https://github.com/lepetitjan/shift-checker/blob/master/LICENSE
-	 */
+  /**
+   * @author Jan
+   * @link https://github.com/lepetitjan/shift-checker
+   * @license https://github.com/lepetitjan/shift-checker/blob/master/LICENSE
+   */
 
 /* PREREQUISITES
 ____________________ */
@@ -25,9 +25,17 @@ ____________________ */
 ____________________ */
   include dirname(__FILE__).'/includes/checkforked.php';
 
+/* CHECK TUNNEL
+_____________________*/
+  include dirname(__FILE__).'/includes/checktunnel.php';
+
 /* CHECK CONSENSUS
 ____________________ */
   include dirname(__FILE__).'/includes/consensus.php';
+
+/* CHECK ipfs and dapp
+_____________________*/
+  include dirname(__FILE__).'/includes/checkdapp.php';
 
 /* CLEANUP LOG FILES
 ____________________ */
